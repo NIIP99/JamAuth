@@ -1,0 +1,15 @@
+#      _                    _         _   _     
+#     | | __ _ _ __ ___    / \  _   _| |_| |__  
+#  _  | |/ _` | '_ ` _ \  / _ \| | | | __| '_ \ 
+# | |_| | (_| | | | | | |/ ___ \ |_| | |_| | | |
+#  \___/ \__,_|_| |_| |_/_/   \_\__,_|\__|_| |_|
+# @copyright (c) 2016 All rights reserved, JamAuth
+# @author    JamAuth
+# @website   http://jamauth.com/
+
+name: JamAuth
+version: "0.1.php"
+api: ["2.0.0"]
+main: JamAuth\JamAuth
+author: JamAuth
+description: "JamAuth - #1 MCPE Server account management solution"

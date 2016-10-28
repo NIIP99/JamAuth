@@ -1,0 +1,17 @@
+---
+#      _                    _         _   _     
+#     | | __ _ _ __ ___    / \  _   _| |_| |__  
+#  _  | |/ _` | '_ ` _ \  / _ \| | | | __| '_ \ 
+# | |_| | (_| | | | | | |/ ___ \ |_| | |_| | | |
+#  \___/ \__,_|_| |_| |_/_/   \_\__,_|\__|_| |_|
+# @copyright (c) 2016 All rights reserved, JamAuth
+# @author    JamAuth
+# @website   http://jamauth.com/
+
+#Secret Code used by server to connect to JamAuth API
+secretKey: xxxxxx
+#Number of tries can be used by a player to authenticate, -1 to disable
+authAttempts: 1
+#Number of seconds for a player to authenticate, -1 to disable
+authTimeout: 120
+...
