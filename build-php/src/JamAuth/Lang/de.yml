@@ -1,0 +1,16 @@
+---
+# JamAuth German Language File (de)
+# Contributors: @deotern, @HimbeersaftLP
+
+name: "German"
+
+main:
+  commandDesc: "JamAuth Hauptbefehl"
+api:
+  init: "Verbindung mit der JamAuth API wird hergestellt..."
+  startError: "Beim starten der API trat ein Fehler auf! Fehler: %0%"
+  nullSecretKey: "Geheimschlüssel fehlt, verwende /ja setsecret <key> zum hinzufügen!"
+err:
+  secretKey: "Der Geheimschlüssel ist ungültig!"
+  null: "Der Fehler konnte nicht identifiziert werden."
+...
