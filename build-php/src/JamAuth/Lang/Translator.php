@@ -7,10 +7,10 @@ class Translator{
     
     private $msg;
     
-    public function __construct($langID){
-        $l_file = __DIR__."/".strtolower($langID).".yml";
+    public function __construct($plugin, $ISO){
+        $l_file = __DIR__."/".strtolower($ISO).".yml";
         if(!is_file($l_file)){
-            echo "Invalid lang!!!!!";
+            $plugin->sendInfo("Invalid Language");
             $l_file = __DIR__."/en.yml";
         }
         $this->msg = new Config($l_file, Config::YAML);
@@ -27,5 +27,9 @@ class Translator{
             }
             return $msg;
         }
+    }
+    
+    public function getNativeLanguage(){
+        return $this->msg->get("name");
     }
 }

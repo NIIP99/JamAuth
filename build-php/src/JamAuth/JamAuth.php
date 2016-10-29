@@ -17,7 +17,8 @@ class JamAuth extends PluginBase{
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
-        $this->translator = new Translator("en");
+        
+        $this->translator = new Translator($this, "en");
         $this->listener = new EventListener($this);
         $this->kitchen = new Kitchen($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);

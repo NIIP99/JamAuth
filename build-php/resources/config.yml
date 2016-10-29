@@ -10,8 +10,11 @@
 
 #Secret Code used by server to connect to JamAuth API
 secretKey: xxxxxx
+
+#Native language of JamAuth [en, de]
+lang: en
 #Number of tries can be used by a player to authenticate, -1 to disable
-authAttempts: 1
+authAttempts: 3
 #Number of seconds for a player to authenticate, -1 to disable
 authTimeout: 120
 ...

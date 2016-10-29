@@ -2,6 +2,8 @@
 # JamAuth English Language File (en)
 # Contributors: @deotern
 
+name: "English"
+
 main:
   commandDesc: "JamAuth Main Command"
 api:
