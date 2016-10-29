@@ -1,0 +1,14 @@
+---
+# JamAuth English Language File (en)
+# Contributors: @deotern
+
+main:
+  commandDesc: "JamAuth Main Command"
+api:
+  init: "Connecting to JamAuth API..."
+  startError: "Starting API Error Occured! Error: %0%"
+  nullSecretKey: "Secret Key is missing, please use /ja setsecret <key>"
+err:
+  secretKey: "Secret Key inserted is inavlid"
+  null: "Unable to indicate the error"
+...

@@ -1,5 +1,5 @@
 <?php
-namespace Plugswork\Utils;
+namespace JamAuth\Utils;
 
 use pocketmine\utils\Config;
 

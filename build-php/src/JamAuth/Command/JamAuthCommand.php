@@ -15,7 +15,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     
     public function __construct(JamAuth $plugin, $name, $desc){
         $this->plugin = $plugin;
-        parent::__construct($name, $desc, "ja");
+        parent::__construct($name, $desc, null, "ja");
     }
     
     public function execute(CommandSender $sender, $alias, array $args){

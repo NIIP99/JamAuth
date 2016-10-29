@@ -5,21 +5,24 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\Utils;
 
-use JamAuth\Task\Timing;
 use JamAuth\Command\JamAuthCommand;
+use JamAuth\Lang\JamLang;
+use JamAuth\Task\Timing;
 
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $listener;
+    private $lang, $listener;
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
+        $this->lang = new JamLang("en");
         $this->listener = new EventListener($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
         $this->loadConfig();
         $this->loadCommand();
+        //update check
     }
     
     public function onDisable(){
@@ -39,11 +42,15 @@ class JamAuth extends PluginBase{
     private function loadCommand(){
         $cm = $this->getServer()->getCommandMap();
         
-        $cm->register("jamauth", new JamAuthCommand($this, "jamauth", "JamAuth Core Command"));
+        $cm->register("jamauth", new JamAuthCommand($this, "jamauth", $this->getLang()->translate("main.commandDesc")));
     }
     
-    private function loadSetting(){
-        
+    public function getLang(){
+        return $this->lang;
+    }
+    
+    public function sendConsole($msg){
+        echo "[JamAuth] ".$msg."\n";
     }
     
 }
