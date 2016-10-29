@@ -6,18 +6,20 @@ use pocketmine\utils\Config;
 use pocketmine\utils\Utils;
 
 use JamAuth\Command\JamAuthCommand;
-use JamAuth\Lang\JamLang;
+use JamAuth\Lang\Translator;
 use JamAuth\Task\Timing;
+use JamAuth\Utils\Kitchen;
 
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $lang, $listener;
+    private $translator, $listener;
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
-        $this->lang = new JamLang("en");
+        $this->translator = new Translator("en");
         $this->listener = new EventListener($this);
+        $this->kitchen = new Kitchen($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
         $this->loadConfig();
@@ -35,21 +37,25 @@ class JamAuth extends PluginBase{
         }
         $this->saveDefaultConfig();
         $this->saveResource("message.yml", false);
-	$message = (new Config($this->getDataFolder()."message.yml"))->getAll();
+	$this->getKitchen()->putFridge((new Config($this->getDataFolder()."message.yml"))->getAll());
         return $this->getConfig()->getAll();
     }
     
     private function loadCommand(){
         $cm = $this->getServer()->getCommandMap();
         
-        $cm->register("jamauth", new JamAuthCommand($this, "jamauth", $this->getLang()->translate("main.commandDesc")));
+        $cm->register("jamauth", new JamAuthCommand($this, "jamauth", $this->getTranslator()->translate("cmd.description")));
     }
     
-    public function getLang(){
-        return $this->lang;
+    public function getTranslator(){
+        return $this->translator;
     }
     
-    public function sendConsole($msg){
+    public function getKitchen(){
+        return $this->kitchen;
+    }
+    
+    public function sendInfo($msg){
         echo "[JamAuth] ".$msg."\n";
     }
     

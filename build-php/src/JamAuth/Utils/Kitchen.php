@@ -1,25 +1,46 @@
 <?php
 namespace JamAuth\Utils;
 
-use pocketmine\utils\Config;
-
-class JamString{
+class Kitchen{
     
+    private $fridge = [];
     private static $TIME_FORMAT = "H:i:s";
     
     public function __construct(){
         
     }
     
-    public static function loadUserMessage(){
-        
+    public function putFridge($foods){
+        $this->fridge = $foods;
     }
     
-    public static function translate(){
-        
+    public function getFridge($name){
+        $names = explode(".", $name);
+        $food = $this->fridge;
+        foreach($names as $n){
+            if(isset($food[$n])){
+                $food = $food[$n];
+            }else{
+                return $name;
+            }
+        }
+        return $food;
     }
     
-    public static function translateColor($string){
+    public function cook($ingredient, $salt, $recipe){
+        //hash
+    }
+    
+    public function getSalt($gram){
+        $salt = "";
+        $cabinet = "abcdefghijklmnopqrstuvwxyz0123456789";
+        for($amt = 0; $amt < $gram; $amt++){
+            $salt .= $cabinet[rand(0,35)];
+        }
+        return $salt;
+    }
+    
+    public static function seasoning($string){
         return preg_replace_callback(
             "/(\\\&|\&)[0-9a-fk-or]/",
             function($matches){
@@ -29,7 +50,7 @@ class JamString{
         );
     }
     
-    public static function translateConstant($string, $name){
+    /*public static function constant($string, $name){
         return str_replace(
             array(
                 "{PLAYER}",
@@ -45,5 +66,5 @@ class JamString{
             ),
             $string
         );
-    }
+    }*/
 }

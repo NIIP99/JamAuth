@@ -3,7 +3,7 @@ namespace JamAuth\Lang;
 
 use pocketmine\utils\Config;
 
-class JamLang{
+class Translator{
     
     private $msg;
     
