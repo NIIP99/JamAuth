@@ -1,0 +1,31 @@
+---
+# JamAuth Dutch Language File (nl)
+# Contributors: @Sandertv
+
+name: "Nederlands"
+
+main:
+  update: "Update beschikbaar (%0%), ga naar het dashboard om de update te downloaden"
+  reload: "JamAuth aan het herladen..."
+  reloadComplete: "JamAuth is herladen"
+api:
+  init: "Connectie krijgen met JamAuth API"
+  startError: "Opstart API error! Error: %0%"
+  nullSecretKey: "Geheime sleutel mist, gebruik: /ja setsecret <key>"
+err:
+  cmd: "Probleem bij het opzetten van de commandos, controleer of je niet al een ander inlogsysteem gebruikt!"
+  null: "Niet mogelijk om de error te identificeren"
+  00: "Onbekende error"
+  10: "Geheime sleutel mist"
+  11: "Geheime sleutel is incorrect"
+  20: "Informatie mist"
+  21: "Informatie is incorrect"
+  30: "Sessie niet gevonden"
+  31: "Onbekende Sessie"
+  33: "Sessie conflict"
+cmd:
+  main: "JamAuth centrale commando"
+  login: "%0% inlog commando"
+  reigster: "%0% registratie commando"
+  logout: "%0% uitlog commando"
+...
