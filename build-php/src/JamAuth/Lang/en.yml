@@ -13,6 +13,7 @@ api:
   startError: "Starting API Error Occured! Error: %0%"
   nullSecretKey: "Secret Key is missing, please use /ja setsecret <key>"
 err:
+  cmd: "Error while setting the commands, please check if you've uninstalled other Auth Related Plugin!"
   null: "Unable to indicate the error"
   00: "Unknown Error"
   10: "Secret Key is missing"
@@ -23,5 +24,8 @@ err:
   31: "Unknown Session"
   33: "Session Conflict"
 cmd:
-  description: "JamAuth Main Command"
+  main: "JamAuth main command"
+  login: "%0% login command"
+  reigster: "%0% registration command"
+  logout: "%0% logout command"
 ...

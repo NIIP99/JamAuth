@@ -33,7 +33,7 @@ class JamAPI{
         return json_decode($res, true);
     }
     
-    public function execute($dat){
+    public function execute($act, $dat){
         //Data Validator
         if(!is_array($dat)){
             $this->plugin->sendInfo(
@@ -45,7 +45,7 @@ class JamAPI{
             return false;
         }
         $json = json_encode($dat);
-        $res = $this->getURL(self::API_HOST."exec?dat=".$json);
+        $res = $this->getURL(self::API_HOST."exec?act=".$act."dat=".$json);
         if($this->hasError($res)){
             $this->plugin->sendInfo(
                     $this->plugin->getTranslator()->translate(
