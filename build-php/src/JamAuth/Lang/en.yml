@@ -5,12 +5,23 @@
 name: "English"
 
 main:
-  commandDesc: "JamAuth Main Command"
+  update: "Update available (%0%), go to dashboard to download update"
+  reload: "Reloading JamAuth..."
+  reloadComplete: "JamAuth reloaded"
 api:
   init: "Connecting to JamAuth API..."
   startError: "Starting API Error Occured! Error: %0%"
   nullSecretKey: "Secret Key is missing, please use /ja setsecret <key>"
 err:
-  secretKey: "Secret Key inserted is inavlid"
   null: "Unable to indicate the error"
+  00: "Unknown Error"
+  10: "Secret Key is missing"
+  11: "Secret Key is invalid"
+  20: "Data is missing"
+  21: "Data is invalid"
+  30: "Session not found"
+  31: "Unknown Session"
+  33: "Session Conflict"
+cmd:
+  description: "JamAuth Main Command"
 ...

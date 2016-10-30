@@ -3,32 +3,58 @@ namespace JamAuth\Utils;
 
 class JamAPI{
     
-    private $plugin, $assetDir;
+    private $plugin, $dir;
     const API_HOST = "http://jamauth.com/api/";
     
-    public function __construct($plugin, $secret, $assetDir){
+    public function __construct($plugin, $secret){
         $this->plugin = $plugin;
-        $this->assetDir = $assetDir;
-        $this->start($secret);
-        //Validate and process the API Session
+        $this->dir = $this->plugin->getDataFolder();
+        if($this->start($secret) !=  false){
+            //Update and validation
+        }
     }
     
     private function start($secret){
-        $result = $this->getURL(self::API_HOST."start?sec=".$secret."&ver=".JAMAUTH_VER);
-        if(strlen($result) === 1){
-            return $result;
+        $dat = [];
+        //Load data
+        $res = $this->getURL(self::API_HOST."start?sec=".$secret."&dat=".json_encode($dat));
+        if($this->hasError($res)){
+            if($res == false){
+                $res = 00;
+            }
+            $this->plugin->sendInfo(
+                    $this->plugin->getTranslator()->translate(
+                            "api.startError",
+                            ["err.".$res]
+                    )
+            );
+            return false;
         }
-        return json_decode($result, true);
+        return json_decode($res, true);
     }
     
     public function execute($dat){
         //Data Validator
-        if(is_array($dat)){
-            $this->plugin->sendInfo($this->plugin->getTranslator()->translate("api.arrayInstance", ["Argument 1 in execute"]));
+        if(!is_array($dat)){
+            $this->plugin->sendInfo(
+                    $this->plugin->getTranslator()->translate(
+                            "api.execError",
+                            ["err.null"]
+                    )
+            );
             return false;
         }
         $json = json_encode($dat);
-        $this->getURL(self::API_HOST."exec?dat=".$json);
+        $res = $this->getURL(self::API_HOST."exec?dat=".$json);
+        if($this->hasError($res)){
+            $this->plugin->sendInfo(
+                    $this->plugin->getTranslator()->translate(
+                            "api.execError",
+                            ["err.".$res]
+                    )
+            );
+            return false;
+        }
     }
     
     public function check(){
@@ -47,10 +73,17 @@ class JamAPI{
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TRUE
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->assetFolder."jamAuth.cache"); 
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->assetFolder."jamAuth.cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."jamAuth.cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->dir."jamAuth.cache"); 
         $return = curl_exec($ch);
         curl_close($ch);
         return $return;
+    }
+    
+    private function hasError($res){
+        if($res == false){
+            return true;
+        }
+        return (strlen($res) == 2);
     }
 }
