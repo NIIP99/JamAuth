@@ -9,7 +9,7 @@ main:
 api:
   init: "Conectando con JamAuth API..."
   startError: "Un error ocurrió durante el inicio! Error: %0%"
-  nullSecretKey: "La llave secreta no se encontró, por favor /ja setsecret <key>"
+  nullSecretKey: "La llave secreta no se encontró. Por favor, use esté comando: /ja setsecret <key>"
 err:
   secretKey: "La llave secreta que inserto no es valida."
   null: "No se puede indicar el error."
