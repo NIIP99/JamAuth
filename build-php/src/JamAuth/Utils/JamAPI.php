@@ -3,37 +3,40 @@ namespace JamAuth\Utils;
 
 class JamAPI{
     
-    private $assetDir;
+    private $plugin, $assetDir;
     const API_HOST = "http://jamauth.com/api/";
     
-    public function __construct($secret, $assetDir){
+    public function __construct($plugin, $secret, $assetDir){
+        $this->plugin = $plugin;
         $this->assetDir = $assetDir;
         $this->start($secret);
         //Validate and process the API Session
     }
     
     private function start($secret){
-        $result = $this->getURL(self::API_HOST."start?secret=".$secret."&ver=".JAMAUTH_VER);
+        $result = $this->getURL(self::API_HOST."start?sec=".$secret."&ver=".JAMAUTH_VER);
         if(strlen($result) === 1){
             return $result;
         }
         return json_decode($result, true);
     }
     
-    public function update($dat){
-        $this->getURL(self::API_HOST."update?dat=".$dat);
-    }
-    
-    public function fetchSettings(){
-        return json_decode($this->getURL(self::API_HOST."fetch"), true);
+    public function execute($dat){
+        //Data Validator
+        if(is_array($dat)){
+            $this->plugin->sendInfo($this->plugin->getTranslator()->translate("api.arrayInstance", ["Argument 1 in execute"]));
+            return false;
+        }
+        $json = json_encode($dat);
+        $this->getURL(self::API_HOST."exec?dat=".$json);
     }
     
     public function check(){
-        return json_decode($this->getURL(self::PROTOCOL."check"), true);
+        return json_decode($this->getURL(self::API_HOST."check"), true);
     }
     
     public function end(){
-        $this->getURL(self::PROTOCOL."end");
+        $this->getURL(self::API_HOST."end");
     }
     
     public function getURL($url){

@@ -8,18 +8,20 @@ use pocketmine\utils\Utils;
 use JamAuth\Command\JamAuthCommand;
 use JamAuth\Lang\Translator;
 use JamAuth\Task\Timing;
+use JamAuth\Utils\JamLogger;
 use JamAuth\Utils\Kitchen;
 
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $translator, $listener;
+    private $translator, $listener, $logger, $kitchen;
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
         
         $this->translator = new Translator($this, "en");
         $this->listener = new EventListener($this);
+        $this->logger = new JamLogger($this);
         $this->kitchen = new Kitchen($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
@@ -29,7 +31,7 @@ class JamAuth extends PluginBase{
     }
     
     public function onDisable(){
-        
+        $this->getLogger()->end();
     }
     
     private function loadConfig(){
@@ -54,6 +56,10 @@ class JamAuth extends PluginBase{
     
     public function getKitchen(){
         return $this->kitchen;
+    }
+    
+    public function getLogger(){
+        return $this->logger;
     }
     
     public function sendInfo($msg){
