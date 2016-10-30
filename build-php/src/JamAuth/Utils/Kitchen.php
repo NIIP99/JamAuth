@@ -4,7 +4,7 @@ namespace JamAuth\Utils;
 class Kitchen{
     
     private $fridge = [];
-    private static $TIME_FORMAT = "H:i:s";
+    public static $TIME_FORMAT = "H:i:s";
     
     public function __construct(){
         

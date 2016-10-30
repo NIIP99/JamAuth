@@ -24,11 +24,11 @@ class JamAuth extends PluginBase{
         $conf = $this->loadConfig();
         $this->translator = new Translator($this, $conf["lang"]);
         $this->loadCommand();
-        
         $this->listener = new EventListener($this);
-        $this->logger = new JamLogger($this);
+        $this->logger = new JamLogger($this, $conf["logging"]);
         $this->api = new JamAPI($this, $conf["secretKey"]);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
+        
     }
     
     public function onDisable(){
@@ -64,7 +64,8 @@ class JamAuth extends PluginBase{
     }
     
     public function sendInfo($msg){
-        echo "[JamAuth] ".$msg."\n";
+        echo "- \e[1;48;5;197m[JamAuth]\e[0m ".$msg."\n";
+        $this->getLogger()->write("info", $msg);
     }
     
 }
