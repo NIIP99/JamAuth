@@ -1,0 +1,16 @@
+---
+# JamAuth Spanish Language File (es)
+# Contributors: @xBeastMode
+
+name: "Spanish"
+
+main:
+  commandDesc: "JamAuth Comando Principal"
+api:
+  init: "Conectando con JamAuth API..."
+  startError: "Un error ocurrió durante el inicio! Error: %0%"
+  nullSecretKey: "La llave secreta no se encontró, por favor /ja setsecret <key>"
+err:
+  secretKey: "La llave secreta que inserto no es valida."
+  null: "No se puede indicar el error."
+...
