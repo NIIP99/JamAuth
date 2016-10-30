@@ -2,15 +2,30 @@
 # JamAuth German Language File (de)
 # Contributors: @deotern, @HimbeersaftLP
 
-name: "German"
+name: "Deutsch"
 
 main:
-  commandDesc: "JamAuth Hauptbefehl"
+  update: "Update verfügbar (%0%), lade es im Dashboard herunter"
+  reload: "JamAuth wird neu geladen..."
+  reloadComplete: "JamAuth wurde neu geladen"
 api:
   init: "Verbindung mit der JamAuth API wird hergestellt..."
   startError: "Beim starten der API trat ein Fehler auf! Fehler: %0%"
   nullSecretKey: "Geheimschlüssel fehlt, verwende /ja setsecret <key> zum hinzufügen!"
 err:
-  secretKey: "Der Geheimschlüssel ist ungültig!"
+  cmd: "Beim Festlegen der Befehle trat ein Fehler auf, bitte sieh nach ob du keine anderen Auth Plugins installiert hast!"
   null: "Der Fehler konnte nicht identifiziert werden."
+  00: "Unbekannter Error"
+  10: "Geheimschlüssel wurde nicht gefunden"
+  11: "Geheimschlüssel ist ungültig"
+  20: "Daten wurden nicht gefunden"
+  21: "Daten sind ungültig"
+  30: "Sitzung nicht gefunden"
+  31: "Unbekannte Sitzung"
+  33: "Sitzungskonflikt"
+cmd:
+  main: "JamAuth Hauptbefehl"
+  login: "%0% Anmeldebefehl"
+  reigster: "%0% Registrierungsbefehl"
+  logout: "%0% Abmeldebefehl"
 ...
