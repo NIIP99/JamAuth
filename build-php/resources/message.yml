@@ -8,5 +8,31 @@
 # @author    JamAuth
 # @website   http://jamauth.com/
 
-msgDat: "Coming soon?"
+join:
+ loading: "Loading your account data, please wait..."
+ message: "Welcome to JamAuth enabled server"
+ err:
+  connection: "Connection error! Please try again later"
+  timeout: "Authenticate Session timeout!"
+  session: "This account has been logged in"
+
+register:
+ message: "Please register using: /register <password>"
+ step1: "To register, please type in your password"
+ step2: "Please confirm by re-type your password"
+ step3: "Please enter your e-mail to finish the registration"
+ success: "Registration completed! Play now!"
+ err:
+  shortPassword: "Password is too short"
+  notMatchPassword: "Repeated password does not matched"
+  email: "Email is invalid"
+  main: "An error occured while registring"
+
+login:
+ message: "Please login using: /login <password>"
+ success: "Logged in! Play now!"
+ err:
+  password: "Password is incorrect!"
+  attempts: "You've tried too many times"
+  main: "An error occured while logging in"
 ...

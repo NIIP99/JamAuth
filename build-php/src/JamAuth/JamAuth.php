@@ -12,6 +12,7 @@ use JamAuth\Lang\Translator;
 use JamAuth\Task\Timing;
 use JamAuth\Utils\JamAPI;
 use JamAuth\Utils\JamLogger;
+use JamAuth\Utils\JamSession;
 use JamAuth\Utils\Kitchen;
 
 class JamAuth extends PluginBase{
@@ -84,6 +85,10 @@ class JamAuth extends PluginBase{
     
     public function getAPI(){
         return $this->api;
+    }
+    
+    public function startSession(Player $p){
+        $this->session[strtolower($p->getName())] = new JamSession($this, $p);
     }
     
     public function sendInfo($msg){

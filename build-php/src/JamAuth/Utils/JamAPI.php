@@ -55,6 +55,7 @@ class JamAPI{
             );
             return false;
         }
+        return json_decode($res, true);
     }
     
     public function check(){
@@ -73,8 +74,8 @@ class JamAPI{
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TRUE
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."jamAuth.cache"); 
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->dir."jamAuth.cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->dir."cache"); 
         $return = curl_exec($ch);
         curl_close($ch);
         return $return;
