@@ -37,7 +37,9 @@ class JamLogger{
     
     public function end(){
         foreach($this->resource as $r){
-            fclose($r);
+            if($r != false){
+                fclose($r);
+            }
         }
     }
     

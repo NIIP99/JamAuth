@@ -1,13 +1,32 @@
 <?php
 namespace JamAuth\Utils;
 
+use JamAuth\Utils\Recipe\JamAuthRecipe;
+use JamAuth\Utils\Recipe\SimpleAuthRecipe;
+use JamAuth\Utils\Recipe\ServerAuthRecipe;
+
 class Kitchen{
     
     private $fridge = [];
+    private $recipe;
     public static $TIME_FORMAT = "H:i:s";
     
-    public function __construct(){
-        
+    public function __construct($recipe){
+        $type = $recipe["type"];
+        switch($type){
+            case "JamAuth":
+                $this->recipe = new ServerAuthRecipe($recipe["data"]);
+                break;
+            case "SimpleAuth":
+                $this->recipe = new SimpleAuthRecipe($recipe["data"]);
+                break;
+            case "ServerAuth":
+                $this->recipe = new ServerAuthRecipe($recipe["data"]);
+                break;
+            default:
+                $this->recipe = new JamAuthRecipe($recipe["data"]);
+                break;
+        }
     }
     
     public function putFridge($foods){
@@ -27,8 +46,8 @@ class Kitchen{
         return $food;
     }
     
-    public function cook($ingredient, $salt, $recipe){
-        //hash
+    public function getRecipe(){
+        return $this->recipe;
     }
     
     public function getSalt($gram){

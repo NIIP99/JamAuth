@@ -23,8 +23,8 @@ class JamAuth extends PluginBase{
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
         
-        $this->kitchen = new Kitchen($this);
         $conf = $this->loadConfig();
+        $this->kitchen = new Kitchen($conf["recipe"]);
         $this->translator = new Translator($this, $conf["lang"]);
         $this->logger = new JamLogger($this, $conf["logging"]);
         if(!$this->loadCommand()){
@@ -52,7 +52,7 @@ class JamAuth extends PluginBase{
         }
         $this->saveDefaultConfig();
         $this->saveResource("message.yml", false);
-	$this->getKitchen()->putFridge((new Config($this->getDataFolder()."message.yml"))->getAll());
+	//$this->getKitchen()->putFridge((new Config($this->getDataFolder()."message.yml"))->getAll());
         return $this->getConfig()->getAll();
     }
     
