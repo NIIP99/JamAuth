@@ -19,20 +19,25 @@ class JamAuth extends PluginBase{
     
     public $command = null;
     private $translator, $listener, $logger, $kitchen, $api;
+    public $conf = [];
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
         
         $conf = $this->loadConfig();
-        $this->kitchen = new Kitchen($conf["recipe"]);
-        $this->translator = new Translator($this, $conf["lang"]);
-        $this->logger = new JamLogger($this, $conf["logging"]);
+        //Prevent other plugin from stealing secret key
+        $secret = $conf["secretKey"];
+        unset($conf["secretKey"]);
+        $this->conf = $conf;
+        $this->kitchen = new Kitchen($this);
+        $this->translator = new Translator($this);
+        $this->logger = new JamLogger($this);
         if(!$this->loadCommand()){
             $this->sendInfo($this->getTranslator()->translate("err.cmd"));
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
-        $this->api = new JamAPI($this, $conf["secretKey"]);
+        $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
     }
@@ -52,7 +57,6 @@ class JamAuth extends PluginBase{
         }
         $this->saveDefaultConfig();
         $this->saveResource("message.yml", false);
-	//$this->getKitchen()->putFridge((new Config($this->getDataFolder()."message.yml"))->getAll());
         return $this->getConfig()->getAll();
     }
     

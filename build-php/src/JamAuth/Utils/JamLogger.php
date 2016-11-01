@@ -13,7 +13,8 @@ class JamLogger{
         "info"
     ];
     
-    public function __construct(JamAuth $plugin, $enabled){
+    public function __construct(JamAuth $plugin){
+        $enabled = $plugin->conf["logging"];
         $dir = $plugin->getDataFolder()."logs";
         if(!is_dir($dir)){
             mkdir($dir, 0777, true);

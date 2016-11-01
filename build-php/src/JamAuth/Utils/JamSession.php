@@ -17,12 +17,14 @@ class JamSession{
     
     public function __construct(JamAuth $plugin, Player $p){
         $this->state = self::STATE_LOADING;
-        $res = $plugin->getAPI()->execute("fetchUser", [$p->getName()]);
-        if(isset($res["claimed"])){
-            
+        $res = $plugin->getAPI()->execute("fetchUser", ["username" => $p->getName()]);
+        $p->sendMessage($plugin->getKitchen()->getFood("join.message"));
+        if(isset($res["hash"])){
+            $p->sendMessage($plugin->getKitchen()->getFood("login.message"));
         }else{
-            
+            $p->sendMessage($plugin->getKitchen()->getFood("register.message"));
         }
+        $this->p = $p;
     }
     
     public function getState(){

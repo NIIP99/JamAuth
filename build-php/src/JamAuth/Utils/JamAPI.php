@@ -8,7 +8,7 @@ class JamAPI{
     
     public function __construct($plugin, $secret){
         $this->plugin = $plugin;
-        $this->dir = $this->plugin->getDataFolder();
+        $this->dir = $this->plugin->getDataFolder()."data/";
         if($this->start($secret) !=  false){
             //Update and validation
         }
@@ -45,7 +45,7 @@ class JamAPI{
             return false;
         }
         $json = json_encode($dat);
-        $res = $this->getURL(self::API_HOST."exec?act=".$act."dat=".$json);
+        $res = $this->getURL(self::API_HOST.$act."?dat=".$json);
         if($this->hasError($res)){
             $this->plugin->sendInfo(
                     $this->plugin->getTranslator()->translate(
@@ -55,6 +55,7 @@ class JamAPI{
             );
             return false;
         }
+        json_decode($res, true);
     }
     
     public function check(){
@@ -73,8 +74,8 @@ class JamAPI{
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TRUE
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."jamAuth.cache"); 
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->dir."jamAuth.cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."cache"); 
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->dir."cache"); 
         $return = curl_exec($ch);
         curl_close($ch);
         return $return;

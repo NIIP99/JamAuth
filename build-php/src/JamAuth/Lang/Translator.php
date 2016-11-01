@@ -7,8 +7,9 @@ class Translator{
     
     private $msg;
     
-    public function __construct($plugin, $ISO){
-        $l_file = __DIR__."/".strtolower($ISO).".yml";
+    public function __construct($plugin){
+        $lang = $plugin->conf["lang"];
+        $l_file = __DIR__."/".strtolower($lang).".yml";
         if(!is_file($l_file)){
             $plugin->sendInfo("Invalid Language");
             $l_file = __DIR__."/en.yml";

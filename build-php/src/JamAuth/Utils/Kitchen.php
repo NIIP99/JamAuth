@@ -1,6 +1,8 @@
 <?php
 namespace JamAuth\Utils;
 
+use pocketmine\utils\Config;
+
 use JamAuth\Utils\Recipe\JamAuthRecipe;
 use JamAuth\Utils\Recipe\SimpleAuthRecipe;
 use JamAuth\Utils\Recipe\ServerAuthRecipe;
@@ -11,11 +13,12 @@ class Kitchen{
     private $recipe;
     public static $TIME_FORMAT = "H:i:s";
     
-    public function __construct($recipe){
+    public function __construct($plugin){
+        $recipe = $plugin->conf["recipe"];
         $type = $recipe["type"];
         switch($type){
             case "JamAuth":
-                $this->recipe = new ServerAuthRecipe($recipe["data"]);
+                $this->recipe = new JamAuthRecipe($recipe["data"]);
                 break;
             case "SimpleAuth":
                 $this->recipe = new SimpleAuthRecipe($recipe["data"]);
@@ -27,23 +30,20 @@ class Kitchen{
                 $this->recipe = new JamAuthRecipe($recipe["data"]);
                 break;
         }
+        $this->fridge = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
     }
     
-    public function putFridge($foods){
-        $this->fridge = $foods;
-    }
-    
-    public function getFridge($name){
-        $names = explode(".", $name);
-        $food = $this->fridge;
-        foreach($names as $n){
-            if(isset($food[$n])){
-                $food = $food[$n];
-            }else{
-                return $name;
+    public function getFood($name){
+        if(empty($msg = $this->msg->getNested($name))){
+            return $name;
+        }else{
+            $i = 0;
+            foreach($args as $arg){           
+                $msg = str_replace("%$i%", self($arg), $msg);
+                $i++;
             }
+            return $msg;
         }
-        return $food;
     }
     
     public function getRecipe(){

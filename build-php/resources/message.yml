@@ -10,7 +10,7 @@
 
 join:
  loading: "Loading your account data, please wait..."
- message: "Welcome to JamAuth enabled server"
+ message: "Welcome to My MCPE Server!"
  err:
   connection: "Connection error! Please try again later"
   timeout: "Authenticate Session timeout!"

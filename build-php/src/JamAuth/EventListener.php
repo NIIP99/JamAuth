@@ -42,6 +42,8 @@ class EventListener implements Listener{
     }
     
     public function onPlayerChat(PlayerChatEvent $e){
-        
+        if($this->plugin->getSession($e->getPlayer()->getName()) != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
     }
 }
