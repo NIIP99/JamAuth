@@ -95,6 +95,15 @@ class JamAuth extends PluginBase{
         $this->session[strtolower($p->getName())] = new JamSession($this, $p);
     }
     
+    public function getSession(Player $p){
+        $pn = strtolower($p->getName());
+        if(isset($this->session[$pn])){
+            return $this->session[$pn];
+        }else{
+            return null;
+        }
+    }
+    
     public function sendInfo($msg){
         echo "- \e[1;48;5;197m[JamAuth]\e[0m ".$msg."\n";
         $this->getLogger()->write("info", $msg);

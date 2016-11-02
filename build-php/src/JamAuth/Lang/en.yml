@@ -15,6 +15,8 @@ api:
 err:
   cmd: "Error while setting the commands, please check if you've uninstalled other Auth Related Plugin!"
   null: "Unable to indicate the error"
+  session: "Player (%0%) is having session conflict"
+  name: "Player (%0%) attempts to join with a name same as other player"
   00: "Unknown Error"
   10: "Secret Key is missing"
   11: "Secret Key is invalid"

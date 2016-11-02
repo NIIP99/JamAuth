@@ -10,7 +10,8 @@ class JamLogger{
     const ENTRIES = [
         "login",
         "register",
-        "info"
+        "info",
+        "error"
     ];
     
     public function __construct(JamAuth $plugin){

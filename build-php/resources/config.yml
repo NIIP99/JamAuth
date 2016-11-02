@@ -37,4 +37,6 @@ logging:
  login: true
  #Log all info message sent to console, false to disable
  info: false
+ #Log all info errors occured, false to disable
+ error: true
 ...

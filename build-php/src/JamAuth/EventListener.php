@@ -34,15 +34,47 @@ class EventListener implements Listener{
     }
     
     public function onPlayerPreLogin(PlayerPreLoginEvent $e){
-        //Account check
+        $p = $e->getPlayer();
+        $s = $this->plugin->getSession($p->getName());
+        if($s != null){ //Conflict
+            if($p->getClientSecret() == $s->getPlayer()->getClientSecret()){
+                $this->plugin->getLogger()->log("error", $this->plugin->getTranslator()->translate("err.session", [$p->getName()]));
+            }elseif($s->getState() == JamSession::STATE_AUTHED){
+                $e->setCancelled();
+                $this->plugin->getLogger()->log("error", $this->plugin->getTranslator()->translate("err.name", [$p->getName()]));
+                $e->setKickMessage($this->plugin->getKitchen()->getFood("login.err.sameName"));
+            }
+        }
     }
     
-    public function onPlayerLogin(PlayerLoginEvent $e){
+    public function onLogin(PlayerLoginEvent $e){
         $this->plugin->startSession($e->getPlayer());
     }
     
-    public function onPlayerChat(PlayerChatEvent $e){
-        if($this->plugin->getSession($e->getPlayer()->getName()) != JamSession::STATE_AUTHED){
+    public function onChat(PlayerChatEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
+    }
+    
+    public function onDropItem(PlayerDropItemEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
+    }
+    
+    public function onInteract(PlayerInteractEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
+    }
+    
+    public function onConsume(PlayerItemConsumeEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
             $e->setCancelled();
         }
     }

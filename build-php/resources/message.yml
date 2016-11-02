@@ -15,6 +15,7 @@ join:
   connection: "Connection error! Please try again later"
   timeout: "Authenticate Session timeout!"
   session: "This account has been logged in"
+  sameName: "Player with the same name is logged in from another device"
 
 register:
  message: "Please register using: /register <password>"
