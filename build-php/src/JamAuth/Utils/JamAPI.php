@@ -9,8 +9,22 @@ class JamAPI{
     public function __construct($plugin, $secret){
         $this->plugin = $plugin;
         $this->dir = $this->plugin->getDataFolder()."data/";
-        if($this->start($secret) !=  false){
-            //Update and validation
+        if(($res = $this->start($secret)) !=  false){
+            if($plugin->hasUpdate($res["newVer"])){
+                $plugin->sendInfo(
+                    $plugin->getTranslator()->translate(
+                            "main.update",
+                            [JAMAUTH_VER." -> ".$res["newVer"]]
+                    )
+                );
+            }
+            if(isset($res["emptyData"])){
+                $plugin->sendInfo(
+                    $plugin->getTranslator()->translate(
+                            "api.emptyData"
+                    )
+                );
+            }
         }
     }
     
@@ -82,7 +96,7 @@ class JamAPI{
     }
     
     private function hasError($res){
-        if($res == false){
+        if($res == false || $res = ""){
             return true;
         }
         return (strlen($res) == 2);

@@ -11,7 +11,7 @@ class Kitchen{
     
     private $fridge = [];
     private $recipe;
-    public static $TIME_FORMAT = "H:i:s";
+    public static $TIME_FORMAT = "Y-M-d H:i:s T";
     
     public function __construct($plugin){
         $recipe = $plugin->conf["recipe"];
@@ -33,13 +33,13 @@ class Kitchen{
         $this->fridge = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
     }
     
-    public function getFood($name){
+    public function getFood($name, $args = []){
         if(empty($msg = $this->msg->getNested($name))){
             return $name;
         }else{
             $i = 0;
             foreach($args as $arg){           
-                $msg = str_replace("%$i%", self($arg), $msg);
+                $msg = str_replace("%$i%", self::getFood($arg), $msg);
                 $i++;
             }
             return $msg;

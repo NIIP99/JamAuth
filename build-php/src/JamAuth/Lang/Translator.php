@@ -23,14 +23,14 @@ class Translator{
         }else{
             $i = 0;
             foreach($args as $arg){           
-                $msg = str_replace("%$i%", self($arg), $msg);
+                $msg = str_replace("%$i%", self::translate($arg), $msg);
                 $i++;
             }
             return $msg;
         }
     }
     
-    public function getNativeLanguage(){
+    public function getLanguageName(){
         return $this->msg->get("name");
     }
 }

@@ -40,6 +40,7 @@ class JamAuth extends PluginBase{
         $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
+        $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, "#", $this->getTranslator()->getLanguageName()]));
     }
     
     public function onDisable(){
@@ -102,6 +103,18 @@ class JamAuth extends PluginBase{
         }else{
             return null;
         }
+    }
+    
+    public function hasUpdate($newVer){
+        $thisVer = explode(".", JAMAUTH_VER);
+        if($newVer["major"] > $thisVer[0]){
+            return true;
+        }elseif($newVer["major"] == $thisVer[0]){
+            if($newVer["minor"] > $thisVer[1]){
+                return true;
+            }
+        }
+        return false;
     }
     
     public function sendInfo($msg){

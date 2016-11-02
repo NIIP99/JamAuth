@@ -17,6 +17,8 @@ lang: en
 authAttempts: 3
 #Number of seconds for a player to authenticate, -1 to disable
 authTimeout: 120
+#Minimum password length can be used by player, -1 to disable minimum limit
+minPasswordLength: 6
 #Enable traditional command authentication method
 command: true
 #Enable direct authenticatation method
