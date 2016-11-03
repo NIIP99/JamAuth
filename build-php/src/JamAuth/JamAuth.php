@@ -14,20 +14,28 @@ use JamAuth\Utils\JamAPI;
 use JamAuth\Utils\JamLogger;
 use JamAuth\Utils\JamSession;
 use JamAuth\Utils\Kitchen;
+use JamAuth\Utils\LocalDatabase;
 
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $translator, $listener, $logger, $kitchen, $api;
+    private $translator, $listener, $logger, $kitchen, $api, $db;
     public $conf = [];
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
         
         $conf = $this->loadConfig();
-        //Prevent other plugin from stealing secret key
+        
+        if(!isset($conf["secretKey"]) || strlen($conf["secretKey"]) != 36){
+            $conf["secretKey"] = "";
+        }
         $secret = $conf["secretKey"];
         unset($conf["secretKey"]);
+        $dir = $this->getDataFolder()."data";
+        if(!is_dir($dir)){
+            mkdir($dir);
+        }
         $this->conf = $conf;
         $this->kitchen = new Kitchen($this);
         $this->translator = new Translator($this);
@@ -37,6 +45,7 @@ class JamAuth extends PluginBase{
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
+        $this->db = new LocalDatabase($this);
         $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
@@ -86,6 +95,10 @@ class JamAuth extends PluginBase{
     
     public function getLogger(){
         return $this->logger;
+    }
+    
+    public function getDatabase(){
+        return $this->db;
     }
     
     public function getAPI(){

@@ -4,28 +4,34 @@ namespace JamAuth\Utils;
 class JamAPI{
     
     private $plugin, $dir;
+    private $offline = true;
     const API_HOST = "http://jamauth.com/api/";
     
     public function __construct($plugin, $secret){
-        $this->plugin = $plugin;
-        $this->dir = $this->plugin->getDataFolder()."data/";
-        if(($res = $this->start($secret)) !=  false){
-            if($plugin->hasUpdate($res["newVer"])){
-                $plugin->sendInfo(
-                    $plugin->getTranslator()->translate(
+        $this->dir = $plugin->getDataFolder()."data/";
+        if($secret == ""){
+            //Send info
+        }else{
+            if(($res = $this->start($secret)) !=  false){
+                if($plugin->hasUpdate($res["newVer"])){
+                    $plugin->sendInfo(
+                        $plugin->getTranslator()->translate(
                             "main.update",
                             [JAMAUTH_VER." -> ".$res["newVer"]]
-                    )
-                );
-            }
-            if(isset($res["emptyData"])){
-                $plugin->sendInfo(
-                    $plugin->getTranslator()->translate(
-                            "api.emptyData"
-                    )
-                );
+                        )
+                    );
+                }
+                if(isset($res["emptyData"])){
+                    $plugin->sendInfo(
+                        $plugin->getTranslator()->translate(
+                                "api.emptyData"
+                        )
+                    );
+                }
+                $this->offline = false;
             }
         }
+        $this->plugin = $plugin;
     }
     
     private function start($secret){
@@ -78,6 +84,10 @@ class JamAPI{
     
     public function end(){
         $this->getURL(self::API_HOST."end");
+    }
+    
+    public function isOffline(){
+        return $this->offline;
     }
     
     public function getURL($url){

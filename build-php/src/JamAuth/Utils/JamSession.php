@@ -21,10 +21,14 @@ class JamSession{
             "username" => $p->getName(),
             "ip" => $p->getIp()
         ];
-        $res = $plugin->getAPI()->execute("fetchUser", $data);
+        if($plugin->getAPI()->isOffline()){
+            $res = $plugin->getDatabase()->fetchUser($p->getName());
+        }else{
+            $res = $plugin->getAPI()->execute("fetchUser", $data);
+        }
         $p->sendMessage($plugin->getKitchen()->getFood("join.message"));
-        if(isset($res["hash"])){
-            $this->hash = $res["hash"];
+        if(isset($res["food"])){
+            $this->hash = $res["food"];
             $this->salt = $res["salt"];
             $p->sendMessage($plugin->getKitchen()->getFood("login.message"));
         }else{
@@ -55,9 +59,12 @@ class JamSession{
         }
         $salt = $kitchen->getSalt(16); //Maybe allow salt bytes customization?
         $food = $kitchen->getRecipe()->cook($pwd, $salt);
-        
+        $time = time();
         //More work...
         
+        if(!$this->plugin->getDatabase()->register($p->getName(), $time, $food, $salt)){
+            $this->plugin->sendInfo(); //Error report
+        }
         $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.success"));
         $this->state = self::STATE_AUTHED;
         return true;
