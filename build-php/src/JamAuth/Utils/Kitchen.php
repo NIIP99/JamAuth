@@ -9,7 +9,7 @@ use JamAuth\Utils\Recipe\ServerAuthRecipe;
 
 class Kitchen{
     
-    private $fridge = [];
+    private $foods = [];
     private $recipe;
     public static $TIME_FORMAT = "Y-M-d H:i:s T";
     
@@ -30,11 +30,11 @@ class Kitchen{
                 $this->recipe = new JamAuthRecipe($recipe["data"]);
                 break;
         }
-        $this->fridge = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
+        $this->foods = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
     }
     
     public function getFood($name, $args = []){
-        if(empty($msg = $this->msg->getNested($name))){
+        if(empty($msg = $this->foods->getNested($name))){
             return $name;
         }else{
             $i = 0;

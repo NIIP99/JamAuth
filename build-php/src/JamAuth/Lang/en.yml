@@ -32,4 +32,5 @@ cmd:
   login: "%0% login command"
   reigster: "%0% registration command"
   logout: "%0% logout command"
+  sendAsPlayer: "This command can be only used as a player"
 ...

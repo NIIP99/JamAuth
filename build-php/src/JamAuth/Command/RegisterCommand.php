@@ -17,8 +17,16 @@ class RegisterCommand extends Command implements PluginIdentifiableCommand{
         parent::__construct($name, $desc);
     }
     
-    public function execute(CommandSender $sender, $alias, array $args){
-        
+    public function execute(CommandSender $s, $alias, array $args){
+        if(!$s instanceof Player){
+            $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsPlayer"));
+            return;
+        }
+        if(isset($args[0])){
+            $this->plugin->getSession($s->getName())->register($args[0]);
+        }else{
+            $s->sendMessage($this->plugin->getKitchen()->getFood("register.err.noPassword"));
+        }
     }
     
     public function getPlugin(){

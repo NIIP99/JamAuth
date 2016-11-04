@@ -24,6 +24,7 @@ register:
  step3: "Please enter your e-mail to finish the registration"
  success: "Registration completed! Play now!"
  err:
+  noPassword: "Please use /register <password> to enter the password"
   shortPassword: "Password is too short"
   notMatchPassword: "Repeated password does not matched"
   email: "Email is invalid"

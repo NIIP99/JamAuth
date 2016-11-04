@@ -18,8 +18,7 @@ class JamSession{
     public function __construct(JamAuth $plugin, Player $p){
         $this->state = self::STATE_LOADING;
         $data = [
-            "username" => $p->getName(),
-            "ip" => $p->getIp()
+            "username" => $p->getName()
         ];
         if($plugin->getAPI()->isOffline()){
             $res = $plugin->getDatabase()->fetchUser($p->getName());
@@ -49,8 +48,12 @@ class JamSession{
     }
     
     public function register($pwd){
-        $minByte = $this->plugin->conf["minPasswordLength"];
         $kitchen = $this->plugin->getKitchen();
+        if($this->getState == self::STATE_LOADING){
+            $this->getPlayer()->sendMessage($kitchen->getFood("join.loading"));
+            return false;
+        }
+        $minByte = $this->plugin->conf["minPasswordLength"];
         if($minByte > 0){
             if(strlen($pwd) < $minByte){
                 $this->getPlayer()->sendMessage($kitchen->getFood("register.err.shortPassword"));
@@ -60,9 +63,12 @@ class JamSession{
         $salt = $kitchen->getSalt(16); //Maybe allow salt bytes customization?
         $food = $kitchen->getRecipe()->cook($pwd, $salt);
         $time = time();
-        //More work...
         
-        if(!$this->plugin->getDatabase()->register($p->getName(), $time, $food, $salt)){
+        if(!$this->plugin->getAPI()->isOffline()){
+            //More work...
+        }
+        
+        if(!$this->plugin->getDatabase()->register($this->getPlayer()->getName(), $time, $food, $salt)){
             $this->plugin->sendInfo(); //Error report
         }
         $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.success"));
@@ -71,11 +77,16 @@ class JamSession{
     }
     
     public function login($pwd){
+        $kitchen = $this->plugin->getKitchen();
+        if($this->getState == self::STATE_LOADING){
+            $this->getPlayer()->sendMessage($kitchen->getFood("join.loading"));
+            return false;
+        }
         if($this->attempts >= $this->plugin->conf["authAttempts"]){
             $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.err.attempts"));
             return false;
         }
-        $r = $this->plugin->getKitchen()->getRecipe();
+        $r = $kitchen->getRecipe();
         if(!$r->isCookedWith($this->hash, $r->cook($pwd, $this->salt), $this->salt)){
             $this->attempts++;
             $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.err.password"));

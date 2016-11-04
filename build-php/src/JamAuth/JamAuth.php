@@ -3,6 +3,7 @@ namespace JamAuth;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use pocketmine\Player;
 
 use JamAuth\Command\JamAuthCommand;
 use JamAuth\Command\RegisterCommand;
@@ -109,10 +110,10 @@ class JamAuth extends PluginBase{
         $this->session[strtolower($p->getName())] = new JamSession($this, $p);
     }
     
-    public function getSession(Player $p){
-        $pn = strtolower($p->getName());
-        if(isset($this->session[$pn])){
-            return $this->session[$pn];
+    public function getSession($pn){
+        $spn = strtolower($pn);
+        if(isset($this->session[$spn])){
+            return $this->session[$spn];
         }else{
             return null;
         }

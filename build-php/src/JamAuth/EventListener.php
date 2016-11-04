@@ -12,14 +12,13 @@ use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerKickEvent;
-use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketSendEvent;
-use pocketmine\Player;
 
 use JamAuth\JamAuth;
 use JamAuth\Utils\JamSession;
@@ -47,7 +46,7 @@ class EventListener implements Listener{
         }
     }
     
-    public function onLogin(PlayerLoginEvent $e){
+    public function onJoin(PlayerJoinEvent $e){
         $this->plugin->startSession($e->getPlayer());
     }
     
