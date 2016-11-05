@@ -2,6 +2,7 @@
 namespace JamAuth\Command;
 
 use JamAuth\JamAuth;
+use JamAuth\Importer\SimpleAuthYAML;
 
 use pocketmine\Player;
 use pocketmine\command\Command;
@@ -18,7 +19,17 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     }
     
     public function execute(CommandSender $sender, $alias, array $args){
+        //Permission check
         
+        switch($args[0]){
+            case "import":
+                $yaml = new SimpleAuthYAML($this->plugin);
+                $yaml->read();
+                break;
+            default:
+                
+                break;
+        }
     }
     
     public function getPlugin(){

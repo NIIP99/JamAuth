@@ -14,7 +14,7 @@ class LoginCommand extends Command implements PluginIdentifiableCommand{
     
     public function __construct(JamAuth $plugin, $name, $desc){
         $this->plugin = $plugin;
-        parent::__construct($name, $desc, null, ["ja"]);
+        parent::__construct($name, $desc);
     }
     
     public function execute(CommandSender $sender, $alias, array $args){
