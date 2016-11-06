@@ -34,6 +34,7 @@ login:
  message: "Please login using: /login <password>"
  success: "Logged in! Play now!"
  err:
+  noPassword: "Please use /login <password>"
   password: "Password is incorrect!"
   attempts: "You've tried too many times"
   main: "An error occured while logging in"

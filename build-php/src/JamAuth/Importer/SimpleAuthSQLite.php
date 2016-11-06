@@ -19,9 +19,10 @@ class SimpleAuthSQLite extends DataImporter{
 	$i = 0;
         while(is_array($row = $res->fetchArray(SQLITE3_ASSOC))){
             $i++;
-            $data["name"] = $row[$name];
-            $data["food"] = $rpw["hash"];
+            $data["name"] = $row["name"];
+            $data["food"] = $row["hash"];
             $data["time"] = $row["registerdate"];
+            $this->write($data);
             $this->setPace($i);
 	}
         $db->close();

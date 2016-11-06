@@ -5,7 +5,7 @@
 name: "English"
 
 main:
-  loaded: "JamAuth Loaded! [Version: %0%, ID: %1%, Language: %2%]"
+  loaded: "JamAuth Loaded! [Version: %0%, Mode: %1%, Language: %2%]"
   update: "Update available (%0%), go to dashboard to download update"
   reload: "Reloading JamAuth..."
   reloadComplete: "JamAuth reloaded"
@@ -17,6 +17,7 @@ api:
   nullSecretKey: "Secret Key is missing, please use /ja setsecret <key>"
   emptyData: "Database is empty! If you're using other Auth Plugin previously, you can import account data with /ja import"
 err:
+  invalidEvent: "Attempts to register invalid event (%0%)! Please re-check suspend option in config.yml"
   cmd: "Error while setting the commands, please check if you've uninstalled other Auth Related Plugin!"
   null: "Unable to indicate the error"
   session: "Player (%0%) is having session conflict"

@@ -18,7 +18,15 @@ class LoginCommand extends Command implements PluginIdentifiableCommand{
     }
     
     public function execute(CommandSender $sender, $alias, array $args){
-        
+        if(!$s instanceof Player){
+            $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsPlayer"));
+            return;
+        }
+        if(isset($args[0])){
+            $this->plugin->getSession($s->getName())->login($args[0]);
+        }else{
+            $s->sendMessage($this->plugin->getKitchen()->getFood("login.err.noPassword"));
+        }
     }
     
     public function getPlugin(){

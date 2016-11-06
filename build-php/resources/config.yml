@@ -19,6 +19,9 @@ authAttempts: 3
 authTimeout: 120
 #Minimum password length can be used by player, -1 to disable minimum limit
 minPasswordLength: 6
+#Cancel event triggered by not authenticated player
+# [move, chat, dropitem, break, interact, consume]
+suspend: "move:chat:dropitem:break:interact:consume"
 #Enable traditional command authentication method
 command: true
 #Enable direct authenticatation method

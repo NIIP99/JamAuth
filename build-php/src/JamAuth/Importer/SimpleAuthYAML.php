@@ -12,7 +12,6 @@ class SimpleAuthYAML extends DataImporter{
         $this->setTotal(iterator_count(new \FilesystemIterator($dir, \FilesystemIterator::SKIP_DOTS)));
         $this->plugin->getDatabase()->truncate();
         //Indexing
-        
         $this->plugin->sendInfo($this->plugin->getTranslator()->translate(
                 "import.start",
                 [$this->getReaderName().":".$this->getReaderType()]

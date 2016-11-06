@@ -19,6 +19,8 @@ use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\plugin\MethodEventExecutor;
+use pocketmine\event\EventPriority;
 
 use JamAuth\JamAuth;
 use JamAuth\Utils\JamSession;
@@ -28,11 +30,43 @@ class EventListener implements Listener{
     private $plugin;
     
     public function __construct(JamAuth $plugin){
-	Server::getInstance()->getPluginManager()->registerEvents($this, $plugin);
         $this->plugin = $plugin;
+        $s = explode(":", $this->plugin->conf["suspend"]);
+        $pm = Server::getInstance()->getPluginManager();
+        
+        $pm->registerEvent(PlayerPreLoginEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onPreLogin"), $this->plugin);
+        $pm->registerEvent(PlayerJoinEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onJoin"), $this->plugin);
+        
+        foreach($s as $act){
+            if(in_array($act, ["move", "chat", "dropitem", "break", "interact", "consume"])){
+                switch($act){
+                    case "move":
+                        $event = PlayerMoveEvent::class;
+                        break;
+                    case "chat":
+                        $event = PlayerChatEvent::class;
+                        break;
+                    case "dropitem":
+                        $event = PlayerDropItemEvent::class;
+                        break;
+                    case "break":
+                        $event = BlockBreakEvent::class;
+                        break;
+                    case "interact":
+                        $event = PlayerInteractEvent::class;
+                        break;
+                    case "consume":
+                        $event = PlayerItemConsumeEvent::class;
+                        break;
+                }
+                $pm->registerEvent($event, $this, EventPriority::NORMAL, new MethodEventExecutor("on_".$act), $this->plugin);
+            }else{
+                $this->plugin->sendInfo($this->plugin->getTranslator()->translate("err.invalidEvent", [$act]));
+            }
+        }
     }
     
-    public function onPlayerPreLogin(PlayerPreLoginEvent $e){
+    public function onPreLogin(PlayerPreLoginEvent $e){
         $p = $e->getPlayer();
         $s = $this->plugin->getSession($p->getName());
         if($s != null){ //Conflict
@@ -50,28 +84,42 @@ class EventListener implements Listener{
         $this->plugin->startSession($e->getPlayer());
     }
     
-    public function onChat(PlayerChatEvent $e){
+    public function on_chat(PlayerChatEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() != JamSession::STATE_AUTHED){
             $e->setCancelled();
         }
     }
     
-    public function onDropItem(PlayerDropItemEvent $e){
+    public function on_dropitem(PlayerDropItemEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() != JamSession::STATE_AUTHED){
             $e->setCancelled();
         }
     }
     
-    public function onInteract(PlayerInteractEvent $e){
+    public function on_interact(PlayerInteractEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() != JamSession::STATE_AUTHED){
             $e->setCancelled();
         }
     }
     
-    public function onConsume(PlayerItemConsumeEvent $e){
+    public function on_consume(PlayerItemConsumeEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
+    }
+    
+    public function on_move(PlayerMoveEvent $e){
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() != JamSession::STATE_AUTHED){
+            $e->setCancelled();
+        }
+    }
+    
+    public function on_break(BlockBreakEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() != JamSession::STATE_AUTHED){
             $e->setCancelled();
