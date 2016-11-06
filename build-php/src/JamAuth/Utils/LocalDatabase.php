@@ -9,32 +9,40 @@ use SQLite3;
 class LocalDatabase{
     
     private $plugin;
-    private $db;
-    private $registerStmt, $fetchStmt;
+    private $db, $stmt;
     
     public function __construct(JamAuth $plugin){
-        $this->db = new SQLite3($plugin->getDataFolder()."data/jamauth.db");
+        $this->plugin = $plugin;
+        $this->loadDatabase();
+    }
+    
+    private function loadDatabase(){
+        $dir = $this->plugin->getDataFolder()."data/jamauth.db";
+        if(!is_file($dir)){
+            $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.createDb"));
+        }
+        $this->db = new SQLite3($dir);
         $this->db->exec(
             "CREATE TABLE IF NOT EXISTS users
             (username TEXT PRIMARY KEY, time INTEGER, food TEXT, salt TEXT, extData TEXT)"
         );
         $stmts = [
-            "registerStmt" =>
+            "register" =>
             "INSERT INTO users (username, time, food, salt, extData)
              VALUES (:username, :time, :food, :salt, :extData)",
             
-            "fetchStmt" =>
+            "fetch" =>
             "SELECT food, salt, extData
              FROM users
              WHERE username = :username"
         ];
         foreach($stmts as $key => $stmt){
-            $this->{$key} = $this->db->prepare($stmt);
+            $this->stmt[$key] = $this->db->prepare($stmt);
         }
     }
     
     public function register($pn, $time, $food, $salt, $data = []){
-        $stmt = $this->registerStmt;
+        $stmt = $this->stmt["register"];
         
         $stmt->bindValue(":username", $pn, SQLITE3_TEXT);
         $stmt->bindValue(":time", $time, SQLITE3_INTEGER);
@@ -50,7 +58,7 @@ class LocalDatabase{
     }
     
     public function fetchUser($pn){
-        $stmt = $this->fetchStmt;
+        $stmt = $this->stmt["fetch"];
         
         $stmt->bindValue(":username", $pn, SQLITE3_TEXT);
         
@@ -62,4 +70,11 @@ class LocalDatabase{
         return null;
     }
     
+    public function truncate(){
+        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.deleteDb"));
+        unset($this->stmt);
+        unset($this->db);
+        unlink($this->plugin->getDataFolder()."data/jamauth.db");
+        $this->loadDatabase();
+    }
 }

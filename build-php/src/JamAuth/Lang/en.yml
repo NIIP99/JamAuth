@@ -9,6 +9,8 @@ main:
   update: "Update available (%0%), go to dashboard to download update"
   reload: "Reloading JamAuth..."
   reloadComplete: "JamAuth reloaded"
+  deleteDb: "Deleting database..."
+  createDb: "Creating new database..."
 api:
   init: "Connecting to JamAuth API..."
   startError: "Starting API Error Occured! Error: %0%"
@@ -27,6 +29,9 @@ err:
   30: "Session not found"
   31: "Unknown Session"
   33: "Session Conflict"
+import:
+  start: "Starting to import database (%0%)"
+  end: "Finishing data importer"
 cmd:
   main: "JamAuth main command"
   login: "%0% login command"
