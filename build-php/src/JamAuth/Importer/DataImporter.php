@@ -6,8 +6,7 @@ use JamAuth\JamAuth;
 abstract class DataImporter{
     
     protected $plugin;
-    private $total = 0, $pace = 0;
-    protected $reqID = "";
+    private $total = 0, $pt = 0;
     
     public function __construct(JamAuth $plugin){
         $this->plugin = $plugin;
@@ -18,7 +17,11 @@ abstract class DataImporter{
     }
     
     public function setPace($pace){
-        $this->pace = $pace;
+        $pt = round(($pace / $this->total) * 100);
+        if($pt > $this->pt){
+            $this->pt = $pt;
+            $this->plugin->sendInfo("Importing: ".$pt."%");
+        }
     }
     
     public function write($data){

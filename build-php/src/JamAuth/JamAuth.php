@@ -132,8 +132,11 @@ class JamAuth extends PluginBase{
     }
     
     public function sendInfo($msg){
-        echo "- \e[1;48;5;197m[JamAuth]\e[0m ".$msg."\n";
-        $this->getLogger()->write("info", $msg);
+        $msgs = explode("\n", $msg);
+        foreach($msgs as $m){
+            echo "- \e[1;48;5;197m[JamAuth]\e[0m ".$m."\n";
+            $this->getLogger()->write("info", $m);
+        }
     }
     
 }

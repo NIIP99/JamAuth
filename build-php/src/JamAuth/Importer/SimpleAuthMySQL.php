@@ -3,7 +3,7 @@ namespace JamAuth\Importer;
 
 class SimpleAuthMySQL extends DataImporter{
     
-    public function read(){
+    public function import(){
         $yml = rtrim(getcwd(), DIRECTORY_SEPARATOR)."/plugins/SimpleAuth/config.yml";
         if(!is_file($yml)){
             $this->plugin->sendInfo("SimpleAuth Data Missing");

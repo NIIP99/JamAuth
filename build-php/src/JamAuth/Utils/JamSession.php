@@ -4,6 +4,7 @@ namespace JamAuth\Utils;
 use pocketmine\Player;
 
 use JamAuth\JamAuth;
+use JamAuth\Task\SessionTimeout;
 
 class JamSession{
     
@@ -36,6 +37,10 @@ class JamSession{
         $this->p = $p;
         $this->plugin = $plugin;
         
+        $time = $plugin->conf["authTimeout"];
+        if($time > 0){
+            $plugin->getServer()->getScheduler()->scheduleDelayedTask(new SessionTimeout($p), $time * 20);
+        }
         $this->state = self::STATE_PENDING;
     }
     

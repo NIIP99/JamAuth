@@ -10,6 +10,7 @@ use JamAuth\JamAuth;
 use JamAuth\Importer\SimpleAuthMySQL;
 use JamAuth\Importer\SimpleAuthSQLite;
 use JamAuth\Importer\SimpleAuthYAML;
+use JamAuth\Task\ImportTask;
 
 class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     
@@ -21,13 +22,17 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
         parent::__construct($name, $desc, null, ["ja"]);
     }
     
-    public function execute(CommandSender $sender, $alias, array $args){
+    public function execute(CommandSender $s, $alias, array $args){
         //Permission check
+        if($s instanceof Player){
+            $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsConsole"));
+            return;
+        }
         
         switch($args[0]){
             case "import":
-                $recipe = (isset($args[1])) ? strtolower($args[1]) : 0;
-                if($recipe === "simpleauth"){
+                $arg = (isset($args[1])) ? strtolower($args[1]) : 0;
+                if($arg === "simpleauth"){
                     $type = (isset($args[2])) ? strtolower($args[2]) : 0;
                     if($type === "mysql"){
                         $this->DataImporter = new SimpleAuthMySQL($this->plugin);
@@ -38,25 +43,26 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                     }else{
                         //Implement Auto Selector
                     }
-                }elseif($recipe === "serverauth"){
+                }elseif($arg === "serverauth"){
                     
+                }elseif($arg === "confirm"){
+                    if(isset($this->DataImporter)){
+                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.importPrepare", [$this->DataImporter->getReaderName()]));
+                        $this->DataImporter->import();
+                        unset($this->DataImporter);
+                    }
                 }else{
                     
                 }
                 if(isset($this->DataImporter)){
-                    $this->DataImporter->read();
-                    unset($this->DataImporter);
+                    $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.confirmImport"));
                 }
                 break;
             case "check":
-                if(isset($this->DataImporter)){
-                    $this->plugin->sendInfo($this->DataImporter->getPace() / $this->DataImporter->getTotal());
-                }else{
-                    $this->plugin->sendInfo(0);
-                }
+                $this->plugin->sendInfo("Version: ".JAMAUTH_VER);
                 break;
             default:
-                
+                $this->plugin->sendInfo();
                 break;
         }
     }

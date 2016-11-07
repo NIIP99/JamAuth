@@ -11,6 +11,8 @@ main:
   reloadComplete: "JamAuth reloaded"
   deleteDb: "Deleting database..."
   createDb: "Creating new database..."
+  confirmImport: "Importing data from other plugin will require to OVERWRITE JamAuth data (Player, forum data, etc may be cleared)\nUse '/jamauth import confirm' to confirm the import process! "
+  importPrepare: "Preparing to import data from %0%"
 api:
   init: "Connecting to JamAuth API..."
   startError: "Starting API Error Occured! Error: %0%"
@@ -32,11 +34,12 @@ err:
   33: "Session Conflict"
 import:
   start: "Starting to import database (%0%)"
-  end: "Finishing data importer"
+  end: "Import Process has been completed!"
 cmd:
   main: "JamAuth main command"
   login: "%0% login command"
   reigster: "%0% registration command"
   logout: "%0% logout command"
   sendAsPlayer: "This command can be only used as a player"
+  sendAsConsole: "This command can be only used from console"
 ...

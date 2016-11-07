@@ -3,7 +3,7 @@ namespace JamAuth\Importer;
 
 class SimpleAuthSQLite extends DataImporter{
     
-    public function read(){
+    public function import(){
         $file = rtrim(getcwd(), DIRECTORY_SEPARATOR)."/plugins/SimpleAuth/players.db";
         if(!is_file($file)){
             $this->plugin->sendInfo("SimpleAuth Data Missing");
