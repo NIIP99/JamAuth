@@ -28,12 +28,14 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
             $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsConsole"));
             return;
         }
-        
+        if(!isset($args[0])){
+            $args[0] = "";
+        }
         switch($args[0]){
             case "import":
                 $arg = (isset($args[1])) ? strtolower($args[1]) : 0;
+                $type = (isset($args[2])) ? strtolower($args[2]) : 0;
                 if($arg === "simpleauth"){
-                    $type = (isset($args[2])) ? strtolower($args[2]) : 0;
                     if($type === "mysql"){
                         $this->DataImporter = new SimpleAuthMySQL($this->plugin);
                     }elseif($type === "yaml"){
@@ -41,28 +43,47 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                     }elseif($type === "sqlite"){
                         $this->DataImporter = new SimpleAuthSQLite($this->plugin);
                     }else{
-                        //Implement Auto Selector
+                        $this->plugin->sendInfo("Use: /jamauth import simpleauth <mysql/yaml/sqlite>");
                     }
                 }elseif($arg === "serverauth"){
-                    
+                    if($type === "mysql"){
+                        $this->DataImporter = new SimpleAuthMySQL($this->plugin);
+                    }elseif($type === "yaml"){
+                        $this->DataImporter = new SimpleAuthYAML($this->plugin);
+                    }else{
+                        $this->plugin->sendInfo("Use: /jamauth import serverauth <mysql/yaml>");
+                    }
                 }elseif($arg === "confirm"){
                     if(isset($this->DataImporter)){
-                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.importPrepare", [$this->DataImporter->getReaderName()]));
+                        $this->plugin->getDatabase()->truncate();
+                        $DI = $this->DataImporter;
+                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate(
+                            "import.start",
+                            [$DI->getTotal(), $DI->getReaderName()." (".$DI->getReaderType().")"]
+                        ));
+                        unset($DI);
                         $this->DataImporter->import();
                         unset($this->DataImporter);
                     }
                 }else{
-                    
+                    $this->plugin->sendInfo("Use: /jamauth import <simpleauth/serverauth>");
                 }
                 if(isset($this->DataImporter)){
-                    $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.confirmImport"));
+                    $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.importPrepare", [$this->DataImporter->getReaderName()]));
+                    $res = $this->DataImporter->prepare();
+                    if($res){
+                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.confirmImport"));
+                    }else{
+                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.prepareError", [$res]));
+                        unset($this->DataImporter);
+                    }
                 }
                 break;
             case "check":
                 $this->plugin->sendInfo("Version: ".JAMAUTH_VER);
                 break;
             default:
-                $this->plugin->sendInfo();
+                $this->plugin->sendInfo("Use: /jamauth <import/check>");
                 break;
         }
     }

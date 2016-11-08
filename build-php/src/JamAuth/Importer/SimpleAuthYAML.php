@@ -3,28 +3,26 @@ namespace JamAuth\Importer;
 
 class SimpleAuthYAML extends DataImporter{
     
-    public function import(){
-        $dir = rtrim(getcwd(), DIRECTORY_SEPARATOR)."/plugins/SimpleAuth/players/";
-        if(!is_dir($dir)){
-            $this->plugin->sendInfo("SimpleAuth Data Missing");
-            return false;
+    private $dir;
+    
+    public function prepare(){
+        $this->dir = rtrim(getcwd(), DIRECTORY_SEPARATOR)."/plugins/SimpleAuth/players/";
+        if(!is_dir($this->dir)){
+            return "SimpleAuth data directory '".$this->dir."' is not found";
 	}
         
         //Tweaks are required
         $c = 0;
-        foreach(glob($dir."*", GLOB_ONLYDIR) as $dir){
+        foreach(glob($this->dir."*", GLOB_ONLYDIR) as $dir){
             $c += count(glob($dir."/"."*.{yml}", GLOB_BRACE));
         }
         $this->setTotal($c);
-        
-        $this->plugin->getDatabase()->truncate();
-        //Indexing
-        $this->plugin->sendInfo($this->plugin->getTranslator()->translate(
-                "import.start",
-                [$this->getReaderName().":".$this->getReaderType()]
-        ));
+        return true;
+    }
+    
+    public function import(){
         $i = 0;
-        foreach(glob($dir."*", GLOB_ONLYDIR) as $dir){
+        foreach(glob($this->dir."*", GLOB_ONLYDIR) as $dir){
             $names = glob($dir."/"."*.{yml}", GLOB_BRACE);
             foreach($names as $name){
                 $i++;

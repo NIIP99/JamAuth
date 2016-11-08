@@ -16,6 +16,10 @@ abstract class DataImporter{
         $this->total = $total;
     }
     
+    public function getTotal(){
+        return $this->total;
+    }
+    
     public function setPace($pace){
         $pt = round(($pace / $this->total) * 100);
         if($pt > $this->pt){

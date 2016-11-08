@@ -33,8 +33,9 @@ err:
   31: "Unknown Session"
   33: "Session Conflict"
 import:
-  start: "Starting to import database (%0%)"
+  start: "Starting to import %0% accounts from %1%"
   end: "Import Process has been completed!"
+  prepareError: "Error occured while preparing the data! (%0%)"
 cmd:
   main: "JamAuth main command"
   login: "%0% login command"
