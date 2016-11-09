@@ -34,7 +34,7 @@ class SimpleAuthYAML extends DataImporter{
                 $this->setPace($i);
             }
         }
-        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("import.end"));
+        $this->finalize();
     }
     
     public function getReaderName(){

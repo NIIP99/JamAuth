@@ -15,15 +15,15 @@ class Kitchen{
     
     public function __construct($plugin){
         $recipe = $plugin->conf["recipe"];
-        $type = $recipe["type"];
+        $type = strtolower($recipe["type"]);
         switch($type){
-            case "JamAuth":
+            case "jamauth":
                 $this->recipe = new JamAuthRecipe($recipe["data"]);
                 break;
-            case "SimpleAuth":
+            case "simpleauth":
                 $this->recipe = new SimpleAuthRecipe($recipe["data"]);
                 break;
-            case "ServerAuth":
+            case "serverauth":
                 $this->recipe = new ServerAuthRecipe($recipe["data"]);
                 break;
             default:

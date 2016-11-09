@@ -19,7 +19,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     
     public function __construct(JamAuth $plugin, $name, $desc){
         $this->plugin = $plugin;
-        parent::__construct($name, $desc, null, ["ja"]);
+        parent::__construct($name, $desc, null, ["jam"]);
     }
     
     public function execute(CommandSender $s, $alias, array $args){
@@ -43,7 +43,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                     }elseif($type === "sqlite"){
                         $this->DataImporter = new SimpleAuthSQLite($this->plugin);
                     }else{
-                        $this->plugin->sendInfo("Use: /jamauth import simpleauth <mysql/yaml/sqlite>");
+                        $this->plugin->sendInfo("Use: /jam import simpleauth <mysql/yaml/sqlite>");
                     }
                 }elseif($arg === "serverauth"){
                     if($type === "mysql"){
@@ -51,7 +51,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                     }elseif($type === "yaml"){
                         $this->DataImporter = new SimpleAuthYAML($this->plugin);
                     }else{
-                        $this->plugin->sendInfo("Use: /jamauth import serverauth <mysql/yaml>");
+                        $this->plugin->sendInfo("Use: /jam import serverauth <mysql/yaml>");
                     }
                 }elseif($arg === "confirm"){
                     if(isset($this->DataImporter)){
@@ -66,7 +66,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                         unset($this->DataImporter);
                     }
                 }else{
-                    $this->plugin->sendInfo("Use: /jamauth import <simpleauth/serverauth>");
+                    $this->plugin->sendInfo("Use: /jam import <simpleauth/serverauth>");
                 }
                 if(isset($this->DataImporter)){
                     $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.importPrepare", [$this->DataImporter->getReaderName()]));
@@ -82,8 +82,11 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
             case "check":
                 $this->plugin->sendInfo("Version: ".JAMAUTH_VER);
                 break;
+            case "set":
+                $cmds = explode("=", $args[1]);
+                break;
             default:
-                $this->plugin->sendInfo("Use: /jamauth <import/check>");
+                $this->plugin->sendInfo("Use: /jam <import/check/set>");
                 break;
         }
     }

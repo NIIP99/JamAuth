@@ -17,7 +17,7 @@ class LoginCommand extends Command implements PluginIdentifiableCommand{
         parent::__construct($name, $desc);
     }
     
-    public function execute(CommandSender $sender, $alias, array $args){
+    public function execute(CommandSender $s, $alias, array $args){
         if(!$s instanceof Player){
             $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsPlayer"));
             return;

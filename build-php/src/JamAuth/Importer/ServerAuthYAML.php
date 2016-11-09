@@ -28,7 +28,7 @@ class ServerAuthYAML extends DataImporter{
             $this->write($data);
             $this->setPace($i);
         }
-        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("import.end"));
+        $this->finalize();
     }
     
     public function getReaderName(){

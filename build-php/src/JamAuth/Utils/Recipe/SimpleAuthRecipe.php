@@ -14,8 +14,8 @@ class SimpleAuthRecipe implements Recipe{
         return bin2hex(hash("sha512", $raw.$salt, true) ^ hash("whirlpool", $salt.$raw, true));
     }
     
-    public function isCookedWith($food, $raw, $salt){
-        return hash_equals($food, $this->cook($raw, $salt));
+    public function isSameFood($foodA, $foodB){
+        return hash_equals($foodA, $foodB);
     }
     
     public function getName(){

@@ -5,7 +5,7 @@ namespace JamAuth\Utils\Recipe;
 interface Recipe{
     
     /**
-     * Returns a cooked string
+     * Returns a food
      * 
      * @param string $raw
      * @param string $salt
@@ -13,12 +13,12 @@ interface Recipe{
     public function cook($raw, $salt);
     
     /**
-     * Checks if a food is made by specified ingredient
+     * Checks if two given foods are same
      * 
-     * @param string $food
-     * @param string $raw
+     * @param string $foodA
+     * @param string $foodB
      */
-    public function isCookedWith($food, $raw, $salt);
+    public function isSameFood($foodA, $foodB);
     
     /**
      * Get the name of the recipe

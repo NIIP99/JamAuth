@@ -119,6 +119,10 @@ class JamAuth extends PluginBase{
         }
     }
     
+    public function endSession($pn){
+        unset($this->session[strtolower($pn)]);
+    }
+    
     public function hasUpdate($newVer){
         $thisVer = explode(".", JAMAUTH_VER);
         if($newVer["major"] > $thisVer[0]){

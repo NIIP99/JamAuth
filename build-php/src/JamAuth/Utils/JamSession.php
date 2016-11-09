@@ -44,6 +44,10 @@ class JamSession{
         $this->state = self::STATE_PENDING;
     }
     
+    public function __destruct(){
+        //Record logout
+    }
+    
     public function getState(){
         return $this->state;
     }
@@ -53,12 +57,13 @@ class JamSession{
     }
     
     public function register($pwd){
-        $kitchen = $this->plugin->getKitchen();
-        if($this->getState == self::STATE_LOADING){
+        $plugin = $this->plugin;
+        $kitchen = $plugin->getKitchen();
+        if($this->getState() == self::STATE_LOADING){
             $this->getPlayer()->sendMessage($kitchen->getFood("join.loading"));
             return false;
         }
-        $minByte = $this->plugin->conf["minPasswordLength"];
+        $minByte = $plugin->conf["minPasswordLength"];
         if($minByte > 0){
             if(strlen($pwd) < $minByte){
                 $this->getPlayer()->sendMessage($kitchen->getFood("register.err.shortPassword"));
@@ -69,21 +74,31 @@ class JamSession{
         $food = $kitchen->getRecipe()->cook($pwd, $salt);
         $time = time();
         
-        if(!$this->plugin->getAPI()->isOffline()){
+        if(!$plugin->getAPI()->isOffline()){
             //More work...
         }
         
-        if(!$this->plugin->getDatabase()->register($this->getPlayer()->getName(), $time, $food, $salt)){
-            $this->plugin->sendInfo(); //Error report
+        if(!$plugin->getDatabase()->register($this->getPlayer()->getName(), $time, $food, $salt)){
+            $plugin->sendInfo($plugin->getTranslator()->translate("err.localRegister", [$this->getPlayer()->getName()])); //Error report
+            $this->getPlayer()->sendMessage($kitchen->getFood("register.err.main"));
+            return false;
         }
-        $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.success"));
+        
+        $this->plugin->getLogger()->write(
+            "register",
+            $this->plugin->getTranslator()->translate(
+                "logger.register",
+                [$this->getPlayer()->getName(), $this->getPlayer()->getAddress()]
+            )
+        );
+        $this->getPlayer()->sendMessage($plugin->getKitchen()->getFood("register.success"));
         $this->state = self::STATE_AUTHED;
         return true;
     }
     
     public function login($pwd){
         $kitchen = $this->plugin->getKitchen();
-        if($this->getState == self::STATE_LOADING){
+        if($this->getState() == self::STATE_LOADING){
             $this->getPlayer()->sendMessage($kitchen->getFood("join.loading"));
             return false;
         }
@@ -92,11 +107,19 @@ class JamSession{
             return false;
         }
         $r = $kitchen->getRecipe();
-        if(!$r->isCookedWith($this->hash, $r->cook($pwd, $this->salt), $this->salt)){
+        if(!$r->isSameFood($this->hash, $r->cook($pwd, $this->salt))){
             $this->attempts++;
             $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.err.password"));
             return false;
         }
+        
+        $this->plugin->getLogger()->write(
+            "login",
+            $this->plugin->getTranslator()->translate(
+                "logger.login",
+                [$this->getPlayer()->getName(), $this->getPlayer()->getAddress()]
+            )
+        );
         $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.success"));
         $this->state = self::STATE_AUTHED;
         return true;

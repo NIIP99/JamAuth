@@ -38,6 +38,7 @@ class SimpleAuthMySQL extends DataImporter{
             $this->setPace($i);
 	}
         $this->db->close();
+        $this->finalize();
     }
     
     public function getReaderName(){

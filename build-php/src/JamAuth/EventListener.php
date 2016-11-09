@@ -34,8 +34,9 @@ class EventListener implements Listener{
         $s = explode(":", $this->plugin->conf["suspend"]);
         $pm = Server::getInstance()->getPluginManager();
         
-        $pm->registerEvent(PlayerPreLoginEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onPreLogin"), $this->plugin);
-        $pm->registerEvent(PlayerJoinEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onJoin"), $this->plugin);
+        $pm->registerEvent(PlayerPreLoginEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onPreLogin"), $plugin);
+        $pm->registerEvent(PlayerJoinEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onJoin"), $plugin);
+        $pm->registerEvent(PlayerQuitEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onQuit"), $plugin);
         
         foreach($s as $act){
             if(in_array($act, ["move", "chat", "dropitem", "break", "interact", "consume"])){
@@ -71,10 +72,10 @@ class EventListener implements Listener{
         $s = $this->plugin->getSession($p->getName());
         if($s != null){ //Conflict
             if($p->getClientSecret() == $s->getPlayer()->getClientSecret()){
-                $this->plugin->getLogger()->log("error", $this->plugin->getTranslator()->translate("err.session", [$p->getName()]));
+                $this->plugin->getLogger()->write("error", $this->plugin->getTranslator()->translate("err.session", [$p->getName()]));
             }elseif($s->getState() == JamSession::STATE_AUTHED){
                 $e->setCancelled();
-                $this->plugin->getLogger()->log("error", $this->plugin->getTranslator()->translate("err.name", [$p->getName()]));
+                $this->plugin->getLogger()->write("error", $this->plugin->getTranslator()->translate("err.name", [$p->getName()]));
                 $e->setKickMessage($this->plugin->getKitchen()->getFood("login.err.sameName"));
             }
         }
@@ -82,6 +83,10 @@ class EventListener implements Listener{
     
     public function onJoin(PlayerJoinEvent $e){
         $this->plugin->startSession($e->getPlayer());
+    }
+    
+    public function onQuit(PlayerQuitEvent $e){
+        $this->plugin->endSession($e->getPlayer()->getName());
     }
     
     public function on_chat(PlayerChatEvent $e){

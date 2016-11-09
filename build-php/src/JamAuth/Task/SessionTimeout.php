@@ -6,7 +6,7 @@ use pocketmine\Player;
 use pocketmine\scheduler\Task;
 use JamAuth\JamAuth;
 
-class Timing extends Task{
+class SessionTimeout extends Task{
     
     private $p;
     

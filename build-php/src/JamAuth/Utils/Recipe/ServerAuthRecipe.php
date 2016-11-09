@@ -19,11 +19,11 @@ class ServerAuthRecipe implements Recipe{
         return hash($this->data["hashAlgo"], $raw);
     }
     
-    public function isCookedWith($food, $raw, $salt = null){
+    public function isSameFood($foodA, $foodB){
         if(isset($this->data["hashEquals"])){
-            return hash_equals($food, $raw);
+            return hash_equals($foodA, $foodB);
         }else{
-            return $food == $this->cook($raw);
+            return $foodA == $foodB;
         }
     }
     
