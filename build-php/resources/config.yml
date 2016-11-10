@@ -29,12 +29,6 @@ direct: false
 #Email is required for registration
 email: false
 
-recipe:
- #Password storage purpose, can be changed to [SimpleAuth, ServerAuth]
- type: JamAuth
- #For advanced modification (Don't edit if you don't know what this is)
- data: []
-
 logging:
  #Log all registration events, false to disable
  register: true

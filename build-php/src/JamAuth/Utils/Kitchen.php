@@ -14,20 +14,29 @@ class Kitchen{
     public static $TIME_FORMAT = "Y-M-d H:i:s T";
     
     public function __construct($plugin){
-        $recipe = $plugin->conf["recipe"];
-        $type = strtolower($recipe["type"]);
-        switch($type){
+        $name = strtolower($plugin->getDatabase()->getRule("recipe.name"));
+        if($name == null){
+            $name = "jamauth";
+            $plugin->getDatabase()->setRule("recipe.name", "jamauth");
+        }
+        $d = $plugin->getDatabase()->getRule("recipe.data");
+        if($d == null){
+            $d = "";
+            $plugin->getDatabase()->setRule("recipe.data");
+        }
+        $data = json_decode($d, true);
+        switch($name){
             case "jamauth":
-                $this->recipe = new JamAuthRecipe($recipe["data"]);
+                $this->recipe = new JamAuthRecipe($data);
                 break;
             case "simpleauth":
-                $this->recipe = new SimpleAuthRecipe($recipe["data"]);
+                $this->recipe = new SimpleAuthRecipe($data);
                 break;
             case "serverauth":
-                $this->recipe = new ServerAuthRecipe($recipe["data"]);
+                $this->recipe = new ServerAuthRecipe($data);
                 break;
             default:
-                $this->recipe = new JamAuthRecipe($recipe["data"]);
+                $this->recipe = new JamAuthRecipe($data);
                 break;
         }
         $this->foods = new Config($plugin->getDataFolder()."message.yml", Config::YAML);

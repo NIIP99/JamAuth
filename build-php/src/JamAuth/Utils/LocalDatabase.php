@@ -26,6 +26,10 @@ class LocalDatabase{
             "CREATE TABLE IF NOT EXISTS users
             (username TEXT PRIMARY KEY, time INTEGER, food TEXT, salt TEXT, extData TEXT)"
         );
+        $this->db->exec(
+            "CREATE TABLE IF NOT EXISTS rules
+            (name TEXT PRIMARY KEY, content TEXT)"
+        );
         $stmts = [
             "register" =>
             "INSERT INTO users (username, time, food, salt, extData)
@@ -34,7 +38,16 @@ class LocalDatabase{
             "fetch" =>
             "SELECT food, salt, extData
              FROM users
-             WHERE username = :username"
+             WHERE username = :username",
+            
+            "getRule" =>
+            "SELECT content
+             FROM rules
+             WHERE name = :name",
+            
+            "setRule" =>
+            "INSERT or REPLACE INTO rules (name, content)
+             VALUES (:name, :content)"
         ];
         foreach($stmts as $key => $stmt){
             $this->stmt[$key] = $this->db->prepare($stmt);
@@ -66,6 +79,33 @@ class LocalDatabase{
         $res = $stmt->execute();
         if(($val = $res->fetchArray(SQLITE3_ASSOC))){
             return $val;
+        }
+        return null;
+    }
+    
+    public function getRule($name){
+        $stmt = $this->stmt["getRule"];
+        
+        $stmt->bindValue(":name", $name, SQLITE3_TEXT);
+        
+        $stmt->reset();
+        $res = $stmt->execute();
+        if(($val = $res->fetchArray(SQLITE3_ASSOC))){
+            return $val["content"];
+        }
+        return null;
+    }
+    
+    public function setRule($name, $cont = ""){
+        $stmt = $this->stmt["setRule"];
+        
+        $stmt->bindValue(":content", $cont, SQLITE3_TEXT);
+        $stmt->bindValue(":name", $name, SQLITE3_TEXT);
+        
+        $stmt->reset();
+        $res = $stmt->execute();
+        if($res === false){
+            return false;
         }
         return null;
     }

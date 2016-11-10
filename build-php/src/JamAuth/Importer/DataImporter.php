@@ -41,24 +41,15 @@ abstract class DataImporter{
     protected function finalize(){
         $plugin = $this->plugin;
         
-        /*$dir = $plugin->getDataFolder()."config.yml";
-        $config = fopen($dir, "r+");
-        $c = [];
-        while(($line = fgets($config)) !== false){
-            $args = explode(":", $line);
-            echo print_r($args);
-            if($args[0] == " tpye"){
-                $c[] = " tpye: ".$this->getReaderName();
-            }elseif($args[0] == " data"){
-                $c[] = " data: ".$this->data;
-            }else{
-                $c[] = $line;
-            }
+        foreach([
+            "import.id" => "#",
+            "import.last" => time()."-".$this->getReaderName()."-".$this->getReaderType(),
+            "recipe.name" => $this->getReaderName(),
+            "recipe.data" => $this->data
+        ] as $name => $rule){
+            $plugin->getDatabase()->setRule($name, $rule);
+            
         }
-        echo print_r($c);
-        ftruncate($config, 0);
-        fwrite($config, implode("", $c));
-        fclose($config);*/ //Trobules...
         
         $plugin->sendInfo($plugin->getTranslator()->translate("import.end"));
     }

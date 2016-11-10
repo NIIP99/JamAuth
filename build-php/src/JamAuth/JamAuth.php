@@ -38,15 +38,15 @@ class JamAuth extends PluginBase{
             mkdir($dir);
         }
         $this->conf = $conf;
-        $this->kitchen = new Kitchen($this);
-        $this->translator = new Translator($this);
         $this->logger = new JamLogger($this);
+        $this->translator = new Translator($this);
+        $this->db = new LocalDatabase($this);
+        $this->kitchen = new Kitchen($this);
         if(!$this->loadCommand()){
             $this->sendInfo($this->getTranslator()->translate("err.cmd"));
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
-        $this->db = new LocalDatabase($this);
         $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         

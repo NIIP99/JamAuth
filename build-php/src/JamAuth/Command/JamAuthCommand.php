@@ -80,10 +80,15 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 }
                 break;
             case "check":
-                $this->plugin->sendInfo("Version: ".JAMAUTH_VER);
+                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline" : "Online";
+                $this->plugin->sendInfo(
+                        "Version: ".JAMAUTH_VER."\n".
+                        "Mode: \n".
+                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
+                );
                 break;
             case "set":
-                $cmds = explode("=", $args[1]);
+                
                 break;
             default:
                 $this->plugin->sendInfo("Use: /jam <import/check/set>");
