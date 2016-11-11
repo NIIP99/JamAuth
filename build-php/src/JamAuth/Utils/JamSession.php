@@ -50,8 +50,16 @@ class JamSession{
     }
     
     public function __destruct(){
-        //TODO Record logout
         $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
+        
+        $state = ($this->getState == self::STATE_AUTHED) ? "Logged In" : "Guest";
+        $this->plugin->getLogger()->write(
+            "logout",
+            $this->plugin->getTranslator()->translate(
+                "logger.logout",
+                [$this->getPlayer()->getName(), $this->getPlayer()->getAddress(), $state]
+            )
+        );
     }
     
     public function getState(){

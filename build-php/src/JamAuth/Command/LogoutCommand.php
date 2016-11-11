@@ -8,6 +8,8 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 
+use JamAuth\Utils\JamSession;
+
 class LogoutCommand extends Command implements PluginIdentifiableCommand{
     
     private $plugin;
@@ -17,8 +19,16 @@ class LogoutCommand extends Command implements PluginIdentifiableCommand{
         parent::__construct($name, $desc);
     }
     
-    public function execute(CommandSender $sender, $alias, array $args){
-        
+    public function execute(CommandSender $s, $alias, array $args){
+        if(!$s instanceof Player){
+            $s->sendMessage($this->plugin->getTranslator()->translate("cmd.sendAsPlayer"));
+            return;
+        }
+        $sess = $this->plugin->getSession($s->getName());
+        if($sess != null && $sess->getState == JamSession::STATE_AUTHED){
+            $s->kick($this->plugin->getKitchen()->getFood("logout.message"));
+            $this->plugin->endSession($s->getName());
+        }
     }
     
     public function getPlugin(){

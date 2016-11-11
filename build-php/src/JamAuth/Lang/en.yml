@@ -47,4 +47,5 @@ cmd:
 logger:
   register: "%0% registered from %1%"
   login: "%0% logged in from %1%"
+  logout: "%0% logged out from %1% (%2%)"
 ...

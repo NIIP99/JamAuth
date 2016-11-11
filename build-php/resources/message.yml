@@ -40,4 +40,7 @@ login:
   password: "&cPassword is incorrect!"
   attempts: "&cYou've tried too many times"
   main: "&cAn error occured while logging in"
+
+logout:
+ message: "&cLogged out!"
 ...

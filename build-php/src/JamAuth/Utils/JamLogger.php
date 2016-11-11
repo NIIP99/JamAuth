@@ -10,6 +10,7 @@ class JamLogger{
     const ENTRIES = [
         "login",
         "register",
+        "logout",
         "info",
         "error"
     ];
