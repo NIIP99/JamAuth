@@ -39,11 +39,23 @@ class Kitchen{
                 $this->recipe = new JamAuthRecipe($data);
                 break;
         }
-        $this->foods = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
+        
+        $foods = new Config($plugin->getDataFolder()."message.yml", Config::YAML);
+        foreach($foods->getAll() as $name => $food){
+            foreach($food as $nam => $foo){
+                if(is_array($foo)){
+                    foreach($foo as $na => $fo){
+                        $this->foods[$name.".".$nam.".".$na] = $this->seasoning($fo);
+                    }
+                }else{
+                    $this->foods[$name.".".$nam] = $this->seasoning($foo);
+                }
+            }
+        }
     }
     
     public function getFood($name, $args = []){
-        if(empty($msg = $this->foods->getNested($name))){
+        if(empty($msg = $this->foods[$name])){
             return $name;
         }else{
             $i = 0;
@@ -68,7 +80,7 @@ class Kitchen{
         return $salt;
     }
     
-    public static function seasoning($string){
+    private function seasoning($string){
         return preg_replace_callback(
             "/(\\\&|\&)[0-9a-fk-or]/",
             function($matches){

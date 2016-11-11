@@ -5,7 +5,7 @@
 name: "English"
 
 main:
-  loaded: "JamAuth Loaded! [Version: %0%, Mode: %1%, Language: %2%]"
+  loaded: "JamAuth Loaded! (%0%) Mode: %1%"
   update: "Update available (%0%), go to dashboard to download update"
   reload: "Reloading JamAuth..."
   reloadComplete: "JamAuth reloaded"

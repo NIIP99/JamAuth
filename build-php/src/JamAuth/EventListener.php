@@ -31,11 +31,15 @@ class EventListener implements Listener{
     
     public function __construct(JamAuth $plugin){
         $this->plugin = $plugin;
-        $s = explode(":", $this->plugin->conf["suspend"]);
+        $s = explode(":", $plugin->conf["suspend"]);
         $pm = Server::getInstance()->getPluginManager();
         
         $pm->registerEvent(PlayerPreLoginEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onPreLogin"), $plugin);
         $pm->registerEvent(PlayerJoinEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onJoin"), $plugin);
+        
+        if($plugin->conf["direct"]){
+            $pm->registerEvent(PlayerCommandPreprocessEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onCommand"), $plugin);
+        }
         $pm->registerEvent(PlayerQuitEvent::class, $this, EventPriority::NORMAL, new MethodEventExecutor("onQuit"), $plugin);
         
         foreach($s as $act){
@@ -83,6 +87,19 @@ class EventListener implements Listener{
     
     public function onJoin(PlayerJoinEvent $e){
         $this->plugin->startSession($e->getPlayer());
+    }
+    
+    public function onCommand(PlayerCommandPreprocessEvent $e){
+        $msg = $e->getMessage();
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s->getState() <= JamSession::STATE_PENDING){
+            if($s->isRegistered()){
+                $s->login($msg);
+            }else{
+                $s->direct($msg);
+            }
+            $e->setCancelled();
+        }
     }
     
     public function onQuit(PlayerQuitEvent $e){

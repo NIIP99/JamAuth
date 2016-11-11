@@ -21,4 +21,8 @@ class SimpleAuthRecipe implements Recipe{
     public function getName(){
         return self::RECIPE_NAME;
     }
+    
+    public function needSalt(){
+        return false;
+    }
 }

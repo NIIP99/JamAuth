@@ -10,7 +10,6 @@ use JamAuth\JamAuth;
 use JamAuth\Importer\SimpleAuthMySQL;
 use JamAuth\Importer\SimpleAuthSQLite;
 use JamAuth\Importer\SimpleAuthYAML;
-use JamAuth\Task\ImportTask;
 
 class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     
@@ -32,6 +31,9 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
             $args[0] = "";
         }
         switch($args[0]){
+            case "secret":
+                
+                break;
             case "import":
                 $arg = (isset($args[1])) ? strtolower($args[1]) : 0;
                 $type = (isset($args[2])) ? strtolower($args[2]) : 0;
@@ -83,7 +85,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline" : "Online";
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
-                        "Mode: \n".
+                        "Mode: ".$mode."\n".
                         "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
                 );
                 break;
@@ -91,7 +93,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 
                 break;
             default:
-                $this->plugin->sendInfo("Use: /jam <import/check/set>");
+                $this->plugin->sendInfo("Use: /jam <secret/import/check/set>");
                 break;
         }
     }

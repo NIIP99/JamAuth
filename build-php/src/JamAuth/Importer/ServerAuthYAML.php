@@ -32,7 +32,7 @@ class ServerAuthYAML extends DataImporter{
     }
     
     public function getReaderName(){
-        return "SimpleAuth";
+        return "ServerAuth";
     }
     
     public function getReaderType(){

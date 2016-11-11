@@ -13,8 +13,10 @@ class JamSession{
     const STATE_AUTHED = 2;
     
     private $plugin;
-    private $p, $state, $attempts = 0;
-    private $hash = "", $salt = "";
+    private $p, $state, $attempts = 0, $step = 0, $saved;
+    private $food = "", $salt = "";
+    
+    private $TaskID;
     
     public function __construct(JamAuth $plugin, Player $p){
         $this->state = self::STATE_LOADING;
@@ -28,24 +30,28 @@ class JamSession{
         }
         $p->sendMessage($plugin->getKitchen()->getFood("join.message"));
         if(isset($res["food"])){
-            $this->hash = $res["food"];
+            $this->food = $res["food"];
             $this->salt = $res["salt"];
             $p->sendMessage($plugin->getKitchen()->getFood("login.message"));
         }else{
-            $p->sendMessage($plugin->getKitchen()->getFood("register.message"));
+            $msg = ($plugin->conf["direct"]) ? $plugin->getKitchen()->getFood("register.step1") : $plugin->getKitchen()->getFood("register.message");
+            $p->sendMessage($msg);
         }
         $this->p = $p;
         $this->plugin = $plugin;
         
         $time = $plugin->conf["authTimeout"];
         if($time > 0){
-            $plugin->getServer()->getScheduler()->scheduleDelayedTask(new SessionTimeout($p), $time * 20);
+            $TimeoutTask = new SessionTimeout($p);
+            $plugin->getServer()->getScheduler()->scheduleDelayedTask($TimeoutTask, $time * 20);
+            $this->TaskID = $TimeoutTask->getTaskId();
         }
         $this->state = self::STATE_PENDING;
     }
     
     public function __destruct(){
-        //Record logout
+        //TODO Record logout
+        $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
     }
     
     public function getState(){
@@ -54,6 +60,38 @@ class JamSession{
     
     public function getPlayer(){
         return $this->p;
+    }
+    
+    public function isRegistered(){
+        return ($this->food != "");
+    }
+    
+    public function direct($msg){
+        switch($this->step){
+            case 0:
+                $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.step2"));
+                $this->saved = $msg;
+                $this->step++;
+                break;
+            case 1:
+                if($this->saved === $msg){
+                    unset($this->saved);
+                    if(!$this->register($msg)){
+                        $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.step1"));
+                        --$this->step;
+                    }
+                    //TODO email configuration
+                    //$this->step++;
+                }else{
+                    $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.err.notMatchPassword"));
+                    $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("register.step1"));
+                    --$this->step;
+                }
+                break;
+            case 2:
+                //Email
+                break;
+        }
     }
     
     public function register($pwd){
@@ -70,7 +108,7 @@ class JamSession{
                 return false;
             }
         }
-        $salt = $kitchen->getSalt(16); //Maybe allow salt bytes customization?
+        $salt = ($kitchen->getRecipe()->needSalt()) ? $kitchen->getSalt(16) : strtolower($this->getPlayer()->getName());
         $food = $kitchen->getRecipe()->cook($pwd, $salt);
         $time = time();
         
@@ -107,7 +145,7 @@ class JamSession{
             return false;
         }
         $r = $kitchen->getRecipe();
-        if(!$r->isSameFood($this->hash, $r->cook($pwd, $this->salt))){
+        if(!$r->isSameFood($this->food, $r->cook($pwd, $this->salt))){
             $this->attempts++;
             $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.err.password"));
             return false;

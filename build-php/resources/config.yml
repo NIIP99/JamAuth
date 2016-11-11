@@ -25,7 +25,7 @@ suspend: "move:chat:dropitem:break:interact:consume"
 #Enable traditional command authentication method
 command: true
 #Enable direct authenticatation method
-direct: false
+direct: true
 #Email is required for registration
 email: false
 

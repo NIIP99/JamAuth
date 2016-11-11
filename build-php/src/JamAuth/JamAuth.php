@@ -50,7 +50,7 @@ class JamAuth extends PluginBase{
         $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
-        $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, "#", $this->getTranslator()->getLanguageName()]));
+        $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, "Offline"]));
     }
     
     public function onDisable(){
@@ -80,9 +80,11 @@ class JamAuth extends PluginBase{
             }
         }
         $cm->register("jamauth", new JamAuthCommand($this, "jamauth", $this->getTranslator()->translate("cmd.main")));
-        $cm->register("login", new LoginCommand($this, "login", $this->getTranslator()->translate("cmd.login")));
-        $cm->register("register", new RegisterCommand($this, "register", $this->getTranslator()->translate("cmd.register")));
-        $cm->register("logout", new LogoutCommand($this, "logout", $this->getTranslator()->translate("cmd.logout")));
+        if($this->conf["command"]){
+            $cm->register("login", new LoginCommand($this, "login", $this->getTranslator()->translate("cmd.login")));
+            $cm->register("register", new RegisterCommand($this, "register", $this->getTranslator()->translate("cmd.register")));
+            $cm->register("logout", new LogoutCommand($this, "logout", $this->getTranslator()->translate("cmd.logout")));
+        }
         return true;
     }
     

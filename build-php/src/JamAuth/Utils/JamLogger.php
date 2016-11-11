@@ -24,7 +24,7 @@ class JamLogger{
             if($enabled[$entry] != true){
                 $res = false;
             }else{
-                $res = fopen($dir."/".$entry.".log", "w");
+                $res = fopen($dir."/".$entry.".log", "a+");
             }
             $this->resource[$entry] = $res;
         }
