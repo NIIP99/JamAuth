@@ -1,5 +1,5 @@
 ![JamAuth](https://github.com/deotern/JamAuth/blob/master/img/jamAuthGithubCover.png)<br>
-JamAuth is a plugin for MCPE Server Software that enables the users to connect to thier account vice-versa from Game Server and Website
+JamAuth is a plugin for MCPE Server Software that enables the users to connect to their account vice-versa from Game Server and Website
 
 ###Features
 - Connect to your MCPE Server players with interactive website
