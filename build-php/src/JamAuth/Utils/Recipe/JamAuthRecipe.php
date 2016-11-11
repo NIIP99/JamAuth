@@ -4,7 +4,7 @@ namespace JamAuth\Utils\Recipe;
 class JamAuthRecipe implements Recipe{
     
     const RECIPE_NAME = "JamAuth";
-    private $cookLoop = 10;
+    private $cookLoop = 26;
     
     public function __construct($data = []){
         if(isset($data["cookLoop"])){
