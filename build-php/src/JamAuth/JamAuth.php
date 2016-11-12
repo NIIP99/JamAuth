@@ -83,6 +83,8 @@ class JamAuth extends PluginBase{
         if($this->conf["command"]){
             $cm->register("login", new LoginCommand($this, "login", $this->getTranslator()->translate("cmd.login")));
             $cm->register("register", new RegisterCommand($this, "register", $this->getTranslator()->translate("cmd.register")));
+        }
+        if($this->conf["allowLogout"]){
             $cm->register("logout", new LogoutCommand($this, "logout", $this->getTranslator()->translate("cmd.logout")));
         }
         return true;

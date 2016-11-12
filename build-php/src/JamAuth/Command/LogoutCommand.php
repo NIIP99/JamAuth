@@ -25,9 +25,8 @@ class LogoutCommand extends Command implements PluginIdentifiableCommand{
             return;
         }
         $sess = $this->plugin->getSession($s->getName());
-        if($sess != null && $sess->getState == JamSession::STATE_AUTHED){
-            $s->kick($this->plugin->getKitchen()->getFood("logout.message"));
-            $this->plugin->endSession($s->getName());
+        if($sess != null && $sess->getState() == JamSession::STATE_AUTHED){
+            $sess->logout(true);
         }
     }
     

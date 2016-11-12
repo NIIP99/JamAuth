@@ -93,18 +93,32 @@ class EventListener implements Listener{
         $msg = $e->getMessage();
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() <= JamSession::STATE_PENDING){
+            if($this->plugin->conf["command"]){
+                $cmd = explode(" ", $msg)[0];
+                if($cmd == "/login" || $cmd == "/register"){
+                    return;
+                }else{
+                    $e->setCancelled();
+                }
+            }
             if($s->isRegistered()){
                 $s->login($msg);
             }else{
                 $s->direct($msg);
             }
-            $e->setCancelled();
         }
     }
     
     public function onQuit(PlayerQuitEvent $e){
-        $this->plugin->endSession($e->getPlayer()->getName());
+        $s = $this->plugin->getSession($e->getPlayer()->getName());
+        if($s != null){
+            $s->logout();
+        }
     }
+    
+    /*
+     * Optional Listener
+     */
     
     public function on_chat(PlayerChatEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());

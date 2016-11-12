@@ -1,0 +1,51 @@
+---
+# JamAuth English Language File (en)
+# Contributors: @deotern
+
+name: "English"
+
+main:
+  loaded: "JamAuth Loaded! (%0%) Mode: %1%"
+  update: "Update available (%0%), go to dashboard to download update"
+  reload: "Reloading JamAuth..."
+  reloadComplete: "JamAuth reloaded"
+  deleteDb: "Deleting database..."
+  createDb: "Creating new database..."
+  confirmImport: "Importing data from other plugin will require to OVERWRITE JamAuth data (Player, forum data, etc may be cleared)\nUse '/jam import confirm' to confirm the import process! "
+  importPrepare: "Preparing to import data from %0%"
+api:
+  init: "Connecting to JamAuth API..."
+  startError: "Starting API Error Occured! Error: %0%"
+  nullSecretKey: "Secret Key is missing, please use /jam setsecret <key>"
+  emptyData: "Database is empty! If you're using other Auth Plugin previously, you can import account data with /jam import"
+err:
+  invalidEvent: "Attempts to register invalid event (%0%)! Please re-check suspend option in config.yml"
+  cmd: "Error while setting the commands, please check if you've uninstalled other Auth Related Plugin!"
+  null: "Unable to indicate the error"
+  session: "Player (%0%) is having session conflict"
+  name: "Player (%0%) attempts to join with a name same as other player"
+  localRegister: "Error while registring player (%0%) to local database"
+  00: "Unknown Error"
+  10: "Secret Key is missing"
+  11: "Secret Key is invalid"
+  20: "Data is missing"
+  21: "Data is invalid"
+  30: "Session not found"
+  31: "Unknown Session"
+  33: "Session Conflict"
+import:
+  start: "Starting to import %0% accounts from %1%"
+  end: "Import Process has been completed!\nPlease RESTART the server to finish the process!!"
+  prepareError: "Error occured while preparing the data! (%0%)"
+cmd:
+  main: "JamAuth main command"
+  login: "%0% login command"
+  reigster: "%0% registration command"
+  logout: "%0% logout command"
+  sendAsPlayer: "This command can be only used as a player"
+  sendAsConsole: "This command can be only used from console"
+logger:
+  register: "%0% registered from %1%"
+  login: "%0% logged in from %1%"
+  logout: "%0% logged out from %1% (%2%)"
+...

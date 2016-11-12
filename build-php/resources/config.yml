@@ -19,6 +19,8 @@ authAttempts: 3
 authTimeout: 120
 #Minimum password length can be used by player, -1 to disable minimum limit
 minPasswordLength: 6
+#Allow player from logging out using /logout command
+allowLogout: true
 #Cancel event triggered by not authenticated player
 # [move, chat, dropitem, break, interact, consume]
 suspend: "move:chat:dropitem:break:interact:consume"

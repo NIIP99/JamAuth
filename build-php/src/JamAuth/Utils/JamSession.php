@@ -42,24 +42,11 @@ class JamSession{
         
         $time = $plugin->conf["authTimeout"];
         if($time > 0){
-            $TimeoutTask = new SessionTimeout($p);
+            $TimeoutTask = new SessionTimeout($plugin, $p);
             $plugin->getServer()->getScheduler()->scheduleDelayedTask($TimeoutTask, $time * 20);
             $this->TaskID = $TimeoutTask->getTaskId();
         }
         $this->state = self::STATE_PENDING;
-    }
-    
-    public function __destruct(){
-        $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
-        
-        $state = ($this->getState == self::STATE_AUTHED) ? "Logged In" : "Guest";
-        $this->plugin->getLogger()->write(
-            "logout",
-            $this->plugin->getTranslator()->translate(
-                "logger.logout",
-                [$this->getPlayer()->getName(), $this->getPlayer()->getAddress(), $state]
-            )
-        );
     }
     
     public function getState(){
@@ -105,6 +92,10 @@ class JamSession{
     public function register($pwd){
         $plugin = $this->plugin;
         $kitchen = $plugin->getKitchen();
+        if($this->isRegistered()){
+            $this->getPlayer()->sendMessage($kitchen->getFood("register.err.registered"));
+            return false;
+        }
         if($this->getState() == self::STATE_LOADING){
             $this->getPlayer()->sendMessage($kitchen->getFood("join.loading"));
             return false;
@@ -149,7 +140,7 @@ class JamSession{
             return false;
         }
         if($this->attempts >= $this->plugin->conf["authAttempts"]){
-            $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.err.attempts"));
+            $this->getPlayer()->kick($this->plugin->getKitchen()->getFood("login.err.attempts"));
             return false;
         }
         $r = $kitchen->getRecipe();
@@ -169,6 +160,25 @@ class JamSession{
         $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.success"));
         $this->state = self::STATE_AUTHED;
         return true;
+    }
+    
+    public function logout($byCmd = false){
+        $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
+        
+        $state = ($this->getState() == self::STATE_AUTHED) ? "Authenticated" : "Guest";
+        $this->plugin->getLogger()->write(
+            "logout",
+            $this->plugin->getTranslator()->translate(
+                "logger.logout",
+                [$this->getPlayer()->getName(), $this->getPlayer()->getAddress(), $state]
+            )
+        );
+        $this->plugin->endSession($this->getPlayer()->getName());
+        
+        if($byCmd){
+            $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("logout.message"));
+            $this->plugin->startSession($this->getPlayer());
+        }
     }
     
 }

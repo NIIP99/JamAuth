@@ -26,6 +26,7 @@ register:
  step3: "&3Please enter your e-mail to finish the registration"
  success: "&aRegistration completed! Play now!"
  err:
+  registered: "&cThis username has been registered"
   noPassword: "&cPlease use /register <password> to enter the password"
   shortPassword: "&cPassword is too short"
   notMatchPassword: "&cRepeated password does not matched"
@@ -33,7 +34,7 @@ register:
   main: "&cAn error occured while registring"
 
 login:
- message: "&3Please loginby typing your password directly"
+ message: "&3Please login by typing your password directly"
  success: "&aLogged in! Play now!"
  err:
   noPassword: "&cPlease use /login <password>"
