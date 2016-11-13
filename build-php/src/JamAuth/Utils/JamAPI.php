@@ -4,56 +4,59 @@ namespace JamAuth\Utils;
 class JamAPI{
     
     private $plugin, $dir;
-    private $offline = true;
+    private $id = 0;
     const API_HOST = "http://jamauth.com/api/";
     
     public function __construct($plugin, $secret){
+        $this->plugin = $plugin;
         $this->dir = $plugin->getDataFolder()."data/";
         if($secret == ""){
             //Send info
         }else{
-            if(($res = $this->start($secret)) !=  false){
-                if($plugin->hasUpdate($res["newVer"])){
-                    $plugin->sendInfo(
-                        $plugin->getTranslator()->translate(
-                            "main.update",
-                            [JAMAUTH_VER." -> ".$res["newVer"]]
-                        )
-                    );
-                }
-                if(isset($res["emptyData"])){
-                    $plugin->sendInfo(
-                        $plugin->getTranslator()->translate(
-                                "api.emptyData"
-                        )
-                    );
-                }
-                $this->offline = false;
-            }
+            $this->start($secret);
         }
-        $this->plugin = $plugin;
     }
     
     private function start($secret){
-        $dat = [];
-        //Load data
-        $res = $this->getURL(self::API_HOST."start?sec=".$secret."&dat=".json_encode($dat));
-        if($this->hasError($res)){
-            if($res == false){
-                $res = 00;
-            }
-            $this->plugin->sendInfo(
-                    $this->plugin->getTranslator()->translate(
-                            "api.startError",
-                            ["err.".$res]
-                    )
-            );
-            return false;
+        $dat["secret"] = $secret;
+        $dat["port"] = $this->plugin->getServer()->getPort();
+        $dat["software"] = $this->plugin->getServer()->getName();
+        $dat["name"] = $this->plugin->getServer()->getMotd();
+        
+        $res = $this->execute("start", $dat);
+        if($res == false){
+            return;
         }
-        return json_decode($res, true);
+        $this->id = $res["id"];
+        
+        if(isset($res["perm"])){
+            $this->plugin->sendInfo(
+                $this->plugin->getTranslator()->translate(
+                    "api.permRequest",
+                    ["http://jamauth.com/s/allow/".$this->getID()]
+                )
+            );
+            return;
+        }
+        
+        if($this->plugin->hasUpdate($res["newVer"])){
+            $this->plugin->sendInfo(
+                $this->plugin->getTranslator()->translate(
+                    "main.update",
+                    [JAMAUTH_VER." -> ".$res["newVer"]]
+                )
+            );
+        }
+        if(isset($res["emptyData"])){
+            $this->plugin->sendInfo(
+                $this->plugin->getTranslator()->translate(
+                    "api.emptyData"
+                )
+             );
+        }
     }
     
-    public function execute($act, $dat){
+    public function execute($act, $dat = []){
         //Data Validator
         if(!is_array($dat)){
             $this->plugin->sendInfo(
@@ -64,8 +67,7 @@ class JamAPI{
             );
             return false;
         }
-        $json = json_encode($dat);
-        $res = $this->getURL(self::API_HOST.$act."?dat=".$json);
+        $res = $this->getURL(self::API_HOST.$act, $dat);
         if($this->hasError($res)){
             $this->plugin->sendInfo(
                     $this->plugin->getTranslator()->translate(
@@ -75,7 +77,7 @@ class JamAPI{
             );
             return false;
         }
-        json_decode($res, true);
+        return json_decode($res, true);
     }
     
     public function check(){
@@ -86,16 +88,21 @@ class JamAPI{
         $this->getURL(self::API_HOST."end");
     }
     
-    public function isOffline(){
-        return $this->offline;
+    public function getID(){
+        return $this->id;
     }
     
-    public function getURL($url){
+    public function isOffline(){
+        return ($this->id === 0);
+    }
+    
+    public function getURL($url, $post = []){
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TRUE
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."cache"); 

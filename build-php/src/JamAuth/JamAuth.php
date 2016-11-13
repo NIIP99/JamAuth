@@ -28,7 +28,7 @@ class JamAuth extends PluginBase{
         
         $conf = $this->loadConfig();
         
-        if(!isset($conf["secretKey"]) || strlen($conf["secretKey"]) != 36){
+        if(!isset($conf["secretKey"]) || strlen($conf["secretKey"]) == "xxxxxx"){
             $conf["secretKey"] = "";
         }
         $secret = $conf["secretKey"];
@@ -50,7 +50,8 @@ class JamAuth extends PluginBase{
         $this->api = new JamAPI($this, $secret);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
-        $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, "Offline"]));
+        $mode = ($this->getAPI()->isOffline()) ? "Offline" : "Online (".$this->getAPI()->getID().")" ;
+        $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, $mode]));
     }
     
     public function onDisable(){
@@ -127,12 +128,13 @@ class JamAuth extends PluginBase{
         unset($this->session[strtolower($pn)]);
     }
     
-    public function hasUpdate($newVer){
+    public function hasUpdate($ver){
+        $newVer = explode(".", $ver);
         $thisVer = explode(".", JAMAUTH_VER);
-        if($newVer["major"] > $thisVer[0]){
+        if($newVer[0] > $thisVer[0]){
             return true;
-        }elseif($newVer["major"] == $thisVer[0]){
-            if($newVer["minor"] > $thisVer[1]){
+        }elseif($newVer[0] == $thisVer[0]){
+            if($newVer[1] > $thisVer[1]){
                 return true;
             }
         }

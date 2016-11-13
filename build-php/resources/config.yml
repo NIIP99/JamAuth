@@ -32,10 +32,12 @@ direct: true
 email: false
 
 logging:
- #Log all registration events, false to disable
+ #Log all registration activities, false to disable
  register: true
- #Log all login events, false to disable
+ #Log all login activities, false to disable
  login: true
+ #Log all logout activities, false to disable
+ logout: true
  #Log all info message sent to console, false to disable
  info: false
  #Log all info errors occured, false to disable
