@@ -18,7 +18,9 @@ class JamAPI{
         
         $this->dir = $plugin->getDataFolder()."data/";
         if($secret == ""){
-            //Send info
+            $this->plugin->sendInfo(
+                $this->plugin->getTranslator()->translate("api.nullSecret")
+            );
         }else{
             $this->start($secret);
         }
@@ -30,6 +32,7 @@ class JamAPI{
         $dat["software"] = $this->plugin->getServer()->getName();
         $dat["name"] = $this->plugin->getServer()->getMotd();
         
+        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("api.init"));
         $res = $this->execute("start", $dat);
         if($res == false){
             return;
@@ -120,7 +123,7 @@ class JamAPI{
     }
     
     private function hasError($res){
-        if($res == false || $res = ""){
+        if($res == false || $res == ""){
             return true;
         }
         return (strlen($res) == 2);

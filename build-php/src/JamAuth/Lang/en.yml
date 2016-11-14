@@ -17,7 +17,7 @@ main:
 api:
   init: "Connecting to JamAuth API..."
   execError: "API Error Occured! Error: %0%"
-  nullSecretKey: "Secret Key is missing, please use /jam setsecret <key>"
+  nullSecret: "Please use '/jam secret' to insert Secret Key for the connection of API"
   permRequest: "API Access Permisssion is pending, please grant the permission at (%0%)"
   emptyData: "Database is empty! If you're using other Auth Plugin previously, you can import account data with /jam import"
 err:
@@ -50,7 +50,7 @@ cmd:
   sendAsPlayer: "This command can be only used as a player"
   sendAsConsole: "This command can be only used from console"
 logger:
-  register: "%0% registered from %1%"
-  login: "%0% logged in from %1%"
-  logout: "%0% logged out from %1% (%2%)"
+  register: "Player, %0% is registered from %1%"
+  login: "Player, %0% is logged in from %1%"
+  logout: "Player, %0% is logged out from %1% (%2%)"
 ...
