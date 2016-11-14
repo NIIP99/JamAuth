@@ -13,9 +13,10 @@ main:
   createDb: "Creating new database..."
   confirmImport: "Importing data from other plugin will require to OVERWRITE JamAuth data (Player, forum data, etc may be cleared)\nUse '/jam import confirm' to confirm the import process! "
   importPrepare: "Preparing to import data from %0%"
+  secretUpdated: "Secret Key is updated! Please restart the server for the change to take effect"
 api:
   init: "Connecting to JamAuth API..."
-  startError: "API Error Occured! Error: %0%"
+  execError: "API Error Occured! Error: %0%"
   nullSecretKey: "Secret Key is missing, please use /jam setsecret <key>"
   permRequest: "API Access Permisssion is pending, please grant the permission at (%0%)"
   emptyData: "Database is empty! If you're using other Auth Plugin previously, you can import account data with /jam import"

@@ -8,9 +8,6 @@
 # @author    JamAuth
 # @website   http://jamauth.com/
 
-#Secret Code used by server to connect to JamAuth API
-secretKey: xxxxxx
-
 #Native language of JamAuth [en, de, es, nl]
 lang: en
 #Number of tries can be used by a player to authenticate, -1 to disable

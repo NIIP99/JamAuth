@@ -32,7 +32,16 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
         }
         switch($args[0]){
             case "secret":
-                
+                if(isset($args[1])){
+                    $this->plugin->getDatabase()->setRule("secret", $args[1]);
+                    $this->plugin->sendInfo(
+                        $this->plugin->getTranslator()->translate(
+                            "main.secretUpdated"
+                        )
+                    );
+                }else{
+                    $this->plugin->sendInfo("Use: /jam secret <key>");
+                }
                 break;
             case "import":
                 $arg = (isset($args[1])) ? strtolower($args[1]) : 0;
@@ -82,11 +91,11 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 }
                 break;
             case "check":
-                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline" : "Online";
+                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline" : "Online  (".$this->plugin->getAPI()->getID().")";
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
                         "Mode: ".$mode."\n".
-                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
+                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName().""
                 );
                 break;
             case "set":

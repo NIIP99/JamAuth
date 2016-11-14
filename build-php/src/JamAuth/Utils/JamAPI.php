@@ -7,8 +7,15 @@ class JamAPI{
     private $id = 0;
     const API_HOST = "http://jamauth.com/api/";
     
-    public function __construct($plugin, $secret){
+    public function __construct($plugin){
         $this->plugin = $plugin;
+        
+        $secret = $plugin->getDatabase()->getRule("secret");
+        if($secret == null){
+            $secret = "";
+            $plugin->getDatabase()->setRule("secret", "");
+        }
+        
         $this->dir = $plugin->getDataFolder()."data/";
         if($secret == ""){
             //Send info
@@ -27,18 +34,18 @@ class JamAPI{
         if($res == false){
             return;
         }
-        $this->id = $res["id"];
         
         if(isset($res["perm"])){
             $this->plugin->sendInfo(
                 $this->plugin->getTranslator()->translate(
                     "api.permRequest",
-                    ["http://jamauth.com/s/allow/".$this->getID()]
+                    ["http://jamauth.com/s/allow/".$res["id"]]
                 )
             );
             return;
         }
         
+        $this->id = $res["id"];
         if($this->plugin->hasUpdate($res["newVer"])){
             $this->plugin->sendInfo(
                 $this->plugin->getTranslator()->translate(
@@ -52,7 +59,7 @@ class JamAPI{
                 $this->plugin->getTranslator()->translate(
                     "api.emptyData"
                 )
-             );
+            );
         }
     }
     

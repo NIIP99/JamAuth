@@ -28,11 +28,6 @@ class JamAuth extends PluginBase{
         
         $conf = $this->loadConfig();
         
-        if(!isset($conf["secretKey"]) || strlen($conf["secretKey"]) == "xxxxxx"){
-            $conf["secretKey"] = "";
-        }
-        $secret = $conf["secretKey"];
-        unset($conf["secretKey"]);
         $dir = $this->getDataFolder()."data";
         if(!is_dir($dir)){
             mkdir($dir);
@@ -47,7 +42,7 @@ class JamAuth extends PluginBase{
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
-        $this->api = new JamAPI($this, $secret);
+        $this->api = new JamAPI($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
         
         $mode = ($this->getAPI()->isOffline()) ? "Offline" : "Online (".$this->getAPI()->getID().")" ;

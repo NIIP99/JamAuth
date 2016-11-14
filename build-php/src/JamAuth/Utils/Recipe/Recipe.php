@@ -25,4 +25,9 @@ interface Recipe{
      */
     public function getName();
     
+    /**
+     * Check if this recipe requires salt or not
+     */
+    public function needSalt();
+    
 }
