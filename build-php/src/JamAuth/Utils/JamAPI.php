@@ -3,7 +3,7 @@ namespace JamAuth\Utils;
 
 class JamAPI{
     
-    private $plugin, $dir;
+    private $plugin, $dir, $err;
     private $id = 0;
     const API_HOST = "http://jamauth.com/api/";
     
@@ -59,26 +59,15 @@ class JamAPI{
         }
         if(isset($res["emptyData"])){
             $this->plugin->sendInfo(
-                $this->plugin->getTranslator()->translate(
-                    "api.emptyData"
-                )
+                $this->plugin->getTranslator()->translate("api.emptyData")
             );
         }
     }
     
     public function execute($act, $dat = []){
-        //Data Validator
-        if(!is_array($dat)){
-            $this->plugin->sendInfo(
-                    $this->plugin->getTranslator()->translate(
-                            "api.execError",
-                            ["err.null"]
-                    )
-            );
-            return false;
-        }
         $res = $this->getURL(self::API_HOST.$act, $dat);
         if($this->hasError($res)){
+            $this->err = $res;
             $this->plugin->sendInfo(
                     $this->plugin->getTranslator()->translate(
                             "api.execError",
@@ -102,6 +91,10 @@ class JamAPI{
         return $this->id;
     }
     
+    public function getError(){
+        return $this->err;
+    }
+    
     public function isOffline(){
         return ($this->id === 0);
     }
@@ -112,7 +105,8 @@ class JamAPI{
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TRUE
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->dir."cache"); 

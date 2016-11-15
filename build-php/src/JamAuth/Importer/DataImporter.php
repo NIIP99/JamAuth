@@ -47,8 +47,7 @@ abstract class DataImporter{
             "recipe.name" => $this->getReaderName(),
             "recipe.data" => $this->data
         ] as $name => $rule){
-            $plugin->getDatabase()->setRule($name, $rule);
-            
+            $plugin->getDatabase()->setRule($name, $rule); 
         }
         
         $plugin->sendInfo($plugin->getTranslator()->translate("import.end"));

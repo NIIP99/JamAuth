@@ -8,13 +8,13 @@ class SimpleAuthSQLite extends DataImporter{
     public function prepare(){
         $file = rtrim(getcwd(), DIRECTORY_SEPARATOR)."/plugins/SimpleAuth/players.db";
         if(!is_file($file)){
-            $this->plugin->sendInfo("SimpleAuth Data Missing");
-            return false;
+            return "SimpleAuth SQLite Data is missing";
 	}
         $this->db = new \SQLite3($file);
 	$res = $this->db->query("SELECT COUNT(*) AS total FROM players");
         $this->setTotal($res->fetchArray(SQLITE3_ASSOC)["total"]);
         $res->finalize();
+        return true;
     }
     
     public function import(){

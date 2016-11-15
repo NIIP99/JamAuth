@@ -112,7 +112,11 @@ class JamSession{
         $time = time();
         
         if(!$plugin->getAPI()->isOffline()){
-            //More work...
+            $data["name"] = $this->getPlayer()->getName();
+            $data["food"] = $food;
+            $data["salt"] = $salt;
+            $data["time"] = $time;
+            $plugin->getAPI()->execute("regUser", $data);
         }
         
         if(!$plugin->getDatabase()->register($this->getPlayer()->getName(), $time, $food, $salt)){

@@ -10,6 +10,9 @@ use JamAuth\JamAuth;
 use JamAuth\Importer\SimpleAuthMySQL;
 use JamAuth\Importer\SimpleAuthSQLite;
 use JamAuth\Importer\SimpleAuthYAML;
+use JamAuth\Importer\ServerAuthMySQL;
+use JamAuth\Importer\ServerAuthYAML;
+use JamAuth\Utils\Kitchen;
 
 class JamAuthCommand extends Command implements PluginIdentifiableCommand{
     
@@ -58,9 +61,9 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                     }
                 }elseif($arg === "serverauth"){
                     if($type === "mysql"){
-                        $this->DataImporter = new SimpleAuthMySQL($this->plugin);
+                        $this->DataImporter = new ServerAuthMySQL($this->plugin);
                     }elseif($type === "yaml"){
-                        $this->DataImporter = new SimpleAuthYAML($this->plugin);
+                        $this->DataImporter = new ServerAuthYAML($this->plugin);
                     }else{
                         $this->plugin->sendInfo("Use: /jam import serverauth <mysql/yaml>");
                     }
@@ -82,20 +85,21 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 if(isset($this->DataImporter)){
                     $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.importPrepare", [$this->DataImporter->getReaderName()]));
                     $res = $this->DataImporter->prepare();
-                    if($res){
+                    if($res === true){
                         $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.confirmImport"));
                     }else{
-                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.prepareError", [$res]));
+                        $this->plugin->sendInfo($this->plugin->getTranslator()->translate("import.prepareError", [$res]));
                         unset($this->DataImporter);
                     }
                 }
                 break;
             case "check":
-                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline" : "Online  (".$this->plugin->getAPI()->getID().")";
+                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline (".$this->plugin->getAPI()->getError().")" : "Online  (".$this->plugin->getAPI()->getID().")";
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
                         "Mode: ".$mode."\n".
-                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName().""
+                        "Database: ".date(Kitchen::$TIME_FORMAT, $this->plugin->getDatabase()->getRule("record"))."\n".
+                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
                 );
                 break;
             case "set":

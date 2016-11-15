@@ -9,7 +9,7 @@ use SQLite3;
 class LocalDatabase{
     
     private $plugin;
-    private $db, $stmt;
+    private $db, $stmt, $s = null;
     
     public function __construct(JamAuth $plugin){
         $this->plugin = $plugin;
@@ -18,7 +18,9 @@ class LocalDatabase{
     
     private function loadDatabase(){
         $dir = $this->plugin->getDataFolder()."data/jamauth.db";
+        $new = false;
         if(!is_file($dir)){
+            $new = true;
             $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.createDb"));
         }
         $this->db = new SQLite3($dir);
@@ -51,6 +53,13 @@ class LocalDatabase{
         ];
         foreach($stmts as $key => $stmt){
             $this->stmt[$key] = $this->db->prepare($stmt);
+        }
+        if($new){
+            $this->setRule("record", time());
+        }
+        if($this->s != null){
+            $this->setRule("secret", $this->s);
+            unset($this->s);
         }
     }
     
@@ -112,6 +121,12 @@ class LocalDatabase{
     
     public function truncate(){
         $this->plugin->sendInfo($this->plugin->getTranslator()->translate("main.deleteDb"));
+        
+        $s = $this->getRule("secret");
+        if($s != null){
+            $this->s = $s;
+        }
+        
         unset($this->stmt);
         unset($this->db);
         unlink($this->plugin->getDataFolder()."data/jamauth.db");
