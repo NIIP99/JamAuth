@@ -11,9 +11,5 @@ class JamAuthNullEvent extends PluginEvent implements Cancellable{
     public function __construct(){
         
     }
-        
-    public function getPlayer(){
-        
-    }
     
 }
