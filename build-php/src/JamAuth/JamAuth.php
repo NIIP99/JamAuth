@@ -20,7 +20,7 @@ use JamAuth\Utils\LocalDatabase;
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $translator, $listener, $logger, $kitchen, $api, $db;
+    private $translator, $listener, $logger, $kitchen, $api, $db, $session = [];
     public $conf = [];
     
     public function onEnable(){
@@ -36,15 +36,18 @@ class JamAuth extends PluginBase{
         $this->logger = new JamLogger($this);
         $this->translator = new Translator($this);
         $this->db = new LocalDatabase($this);
-        $this->kitchen = new Kitchen($this);
         if(!$this->loadCommand()){
             $this->sendInfo($this->getTranslator()->translate("err.cmd"));
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
-        $this->api = new JamAPI($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
-        
+        $this->load();
+    }
+    
+    private function load(){
+        $this->kitchen = new Kitchen($this);
+        $this->api = new JamAPI($this);
         $mode = ($this->getAPI()->isOffline()) ? "Offline" : "Online (".$this->getAPI()->getID().")" ;
         $this->sendInfo($this->getTranslator()->translate("main.loaded", [JAMAUTH_VER, $mode]));
     }
@@ -119,7 +122,7 @@ class JamAuth extends PluginBase{
         }
     }
     
-    public function endSession($pn){
+    public function killSession($pn){
         unset($this->session[strtolower($pn)]);
     }
     
@@ -134,6 +137,18 @@ class JamAuth extends PluginBase{
             }
         }
         return false;
+    }
+    
+    public function reload(){
+        $this->sendInfo($this->getTranslator()->translate("main.reload"));
+        
+        unset($this->kitchen);
+        unset($this->api);
+        $this->load();
+        
+        foreach($this->session as $s){
+            $s->logout(true);
+        }
     }
     
     public function sendInfo($msg){

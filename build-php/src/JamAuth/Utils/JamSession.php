@@ -166,7 +166,7 @@ class JamSession{
         return true;
     }
     
-    public function logout($byCmd = false){
+    public function logout($stayed = false){
         $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
         
         $state = ($this->getState() == self::STATE_AUTHED) ? "Authenticated" : "Guest";
@@ -177,9 +177,9 @@ class JamSession{
                 [$this->getPlayer()->getName(), $this->getPlayer()->getAddress(), $state]
             )
         );
-        $this->plugin->endSession($this->getPlayer()->getName());
+        $this->plugin->killSession($this->getPlayer()->getName());
         
-        if($byCmd){
+        if($stayed){
             $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("logout.message"));
             $this->plugin->startSession($this->getPlayer());
         }

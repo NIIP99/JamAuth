@@ -8,12 +8,11 @@ main:
   loaded: "JamAuth Loaded! (%0%) Mode: %1%"
   update: "Update available (%0%), go to dashboard to download update"
   reload: "Reloading JamAuth..."
-  reloadComplete: "JamAuth reloaded"
   deleteDb: "Deleting database..."
   createDb: "Creating new database..."
   confirmImport: "Importing data from other plugin will require to OVERWRITE JamAuth data (Player, forum data, etc may be cleared)\nUse '/jam import confirm' to confirm the import process! "
   importPrepare: "Preparing to import data from %0%"
-  secretUpdated: "Secret Key is updated! Please restart the server for the change to take effect"
+  secretUpdated: "Secret Key is updated! Please use '/jam reload' for the change to take effect"
 api:
   init: "Connecting to JamAuth API..."
   execError: "API Error Occured! Error: %0%"
@@ -23,11 +22,11 @@ api:
 err:
   invalidEvent: "Attempts to register invalid event (%0%)! Please re-check suspend option in config.yml"
   cmd: "Error while setting the commands, please check if you've uninstalled other Auth Related Plugin!"
-  null: "Unable to indicate the error"
+  null: "Unknown Error"
   session: "Player (%0%) is having session conflict"
   name: "Player (%0%) attempts to join with a name same as other player"
   localRegister: "Error while registring player (%0%) to local database"
-  00: "Unknown Error"
+  00: "Server Error"
   10: "Data is missing"
   11: "Data is invalid"
   12: "Secret Key is invalid"
@@ -40,7 +39,7 @@ err:
   33: "Session Conflict"
 import:
   start: "Starting to import %0% accounts from %1%"
-  end: "Import Process has been completed!\nPlease RESTART the server to finish the process!!"
+  end: "Import Process has been completed!\nPlease use '/jam reload' to finish the process!!"
   prepareError: "Error occured while preparing the data! (%0%)"
 cmd:
   main: "JamAuth main command"

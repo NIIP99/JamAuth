@@ -1,8 +1,6 @@
 <?php
 namespace JamAuth\Utils;
 
-use pocketmine\Player;
-
 use JamAuth\JamAuth;
 use SQLite3;
 

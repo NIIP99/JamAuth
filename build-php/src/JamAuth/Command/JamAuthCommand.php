@@ -102,11 +102,14 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                         "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
                 );
                 break;
+            case "reload":
+                $this->plugin->reload();
+                break;
             case "set":
-                
+                //Rule settings, maybe
                 break;
             default:
-                $this->plugin->sendInfo("Use: /jam <secret/import/check/set>");
+                $this->plugin->sendInfo("Use: /jam <secret/import/check/reload>");
                 break;
         }
     }
