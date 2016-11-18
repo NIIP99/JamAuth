@@ -94,12 +94,15 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 }
                 break;
             case "check":
-                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline (".$this->plugin->getAPI()->getError().")" : "Online  (".$this->plugin->getAPI()->getID().")";
+                $mode = ($this->plugin->getAPI()->isOffline()) ? "Offline (".$this->plugin->getAPI()->getError().")" : "Online (".$this->plugin->getAPI()->getID().")";
+                $sData = $this->plugin->getSessionData();
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
                         "Mode: ".$mode."\n".
                         "Database: ".date(Kitchen::$TIME_FORMAT, $this->plugin->getDatabase()->getRule("record"))."\n".
-                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n"
+                        "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n".
+                        "Session: ".$sData["total"]." total, ".$sData["authed"]." authenticated, ".$sData["pending"]." pending\n".
+                        "Task Tick: ".$this->plugin->getTask()->getTick()."th"
                 );
                 break;
             case "reload":

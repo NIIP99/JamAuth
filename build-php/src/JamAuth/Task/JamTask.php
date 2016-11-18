@@ -4,9 +4,10 @@ namespace JamAuth\Task;
 use pocketmine\scheduler\PluginTask;
 use JamAuth\JamAuth;
 
-class Timing extends PluginTask{
+class JamTask extends PluginTask{
     
     private $plugin;
+    private $tick = 0;
     
     public function __construct(JamAuth $plugin){
     	parent::__construct($plugin);
@@ -14,6 +15,10 @@ class Timing extends PluginTask{
     }
     
     public function onRun($tick){
-        
+        $this->tick = $tick;
+    }
+    
+    public function getTick(){
+       return $this->tick;
     }
 }

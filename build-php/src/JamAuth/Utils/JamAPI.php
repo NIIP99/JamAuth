@@ -28,9 +28,10 @@ class JamAPI{
     
     private function start($secret){
         $dat["secret"] = $secret;
-        $dat["port"] = $this->plugin->getServer()->getPort();
-        $dat["software"] = $this->plugin->getServer()->getName();
-        $dat["name"] = $this->plugin->getServer()->getMotd();
+        $server = $this->plugin->getServer();
+        $dat["port"] = $server->getPort();
+        $dat["software"] = $server->getName()." ".$server->getVersion();
+        $dat["name"] = $server->getMotd();
         
         $this->plugin->sendInfo($this->plugin->getTranslator()->translate("api.init"));
         $res = $this->execute("start", $dat);
@@ -38,11 +39,11 @@ class JamAPI{
             return;
         }
         
-        if(isset($res["perm"])){
+        if(isset($res["link"])){
             $this->plugin->sendInfo(
                 $this->plugin->getTranslator()->translate(
                     "api.permRequest",
-                    ["http://jamauth.com/s/allow/".$res["id"]]
+                    [$res["link"]]
                 )
             );
             return;

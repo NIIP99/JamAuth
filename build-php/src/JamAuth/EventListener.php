@@ -119,7 +119,6 @@ class EventListener implements Listener{
     /*
      * Optional Listener
      */
-    
     public function on_chat(PlayerChatEvent $e){
         $s = $this->plugin->getSession($e->getPlayer()->getName());
         if($s->getState() != JamSession::STATE_AUTHED){

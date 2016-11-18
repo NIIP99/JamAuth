@@ -11,7 +11,7 @@ class Kitchen{
     
     private $foods = [];
     private $recipe;
-    public static $TIME_FORMAT = "Y-M-d H:i:s T";
+    public static $TIME_FORMAT = "Y-M-d H:i:s";
     
     public function __construct($plugin){
         $name = strtolower($plugin->getDatabase()->getRule("recipe.name"));

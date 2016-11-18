@@ -10,7 +10,7 @@ use JamAuth\Command\RegisterCommand;
 use JamAuth\Command\LoginCommand;
 use JamAuth\Command\LogoutCommand;
 use JamAuth\Lang\Translator;
-use JamAuth\Task\Timing;
+use JamAuth\Task\JamTask;
 use JamAuth\Utils\JamAPI;
 use JamAuth\Utils\JamLogger;
 use JamAuth\Utils\JamSession;
@@ -20,8 +20,15 @@ use JamAuth\Utils\LocalDatabase;
 class JamAuth extends PluginBase{
     
     public $command = null;
-    private $translator, $listener, $logger, $kitchen, $api, $db, $session = [];
-    public $conf = [];
+    private $translator,
+            $listener,
+            $logger,
+            $kitchen,
+            $api,
+            $db,
+            $task,
+            $session = [];
+    public $conf = [], $timing = [];
     
     public function onEnable(){
         define("JAMAUTH_VER", $this->getDescription()->getVersion());
@@ -41,7 +48,8 @@ class JamAuth extends PluginBase{
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         $this->listener = new EventListener($this);
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timing($this), 6000);
+        $this->task = new JamTask($this);
+        $this->getServer()->getScheduler()->scheduleRepeatingTask($this->task, 1200);
         $this->load();
     }
     
@@ -101,6 +109,10 @@ class JamAuth extends PluginBase{
         return $this->logger;
     }
     
+    public function getTask(){
+        return $this->task;
+    }
+    
     public function getDatabase(){
         return $this->db;
     }
@@ -124,6 +136,19 @@ class JamAuth extends PluginBase{
     
     public function killSession($pn){
         unset($this->session[strtolower($pn)]);
+    }
+    
+    public function getSessionData(){
+        $dat["total"] = count($this->session);
+        $i = 0;
+        foreach($this->session as $s){
+            if($s->getState() == JamSession::AUTHED){
+                $i++;
+            }
+        }
+        $dat["authed"] = $i;
+        $dat["pending"] = $dat["total"] - $i;
+        return $dat;
     }
     
     public function hasUpdate($ver){
