@@ -31,6 +31,7 @@ err:
   11: "Data is invalid"
   12: "Secret Key is invalid"
   13: "Action is invalid"
+  14: "CID is invalid"
   20: "Result error"
   21: "API Access Permission is pending"
   22: "API Access Permission is denied"

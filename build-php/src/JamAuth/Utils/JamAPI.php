@@ -4,7 +4,7 @@ namespace JamAuth\Utils;
 class JamAPI{
     
     private $plugin, $dir, $err;
-    private $id = 0;
+    private $id = 0, $CID = 0;
     const API_HOST = "http://jamauth.com/api/";
     
     public function __construct($plugin){
@@ -50,6 +50,8 @@ class JamAPI{
         }
         
         $this->id = $res["id"];
+        $this->CID = $res["CID"];
+        
         if($this->plugin->hasUpdate($res["newVer"])){
             $this->plugin->sendInfo(
                 $this->plugin->getTranslator()->translate(
@@ -66,6 +68,7 @@ class JamAPI{
     }
     
     public function execute($act, $dat = []){
+        $dat["CID"] = $this->CID;
         $res = $this->getURL(self::API_HOST.$act, $dat);
         if($this->hasError($res)){
             $this->err = $res;
