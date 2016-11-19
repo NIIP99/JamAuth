@@ -156,6 +156,11 @@ class JamSession{
             return false;
         }
         
+        if(!$this->plugin->getAPI()->isOffline()){
+            //Bulk login query, for record purpose only
+            $this->plugin->getTask()->pushLogin($this->getPlayer()->getName());
+        }
+        
         $this->plugin->getLogger()->write(
             "login",
             $this->plugin->getTranslator()->translate(

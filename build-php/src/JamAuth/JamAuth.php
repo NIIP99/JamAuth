@@ -142,7 +142,7 @@ class JamAuth extends PluginBase{
         $dat["total"] = count($this->session);
         $i = 0;
         foreach($this->session as $s){
-            if($s->getState() == JamSession::AUTHED){
+            if($s->getState() == JamSession::STATE_AUTHED){
                 $i++;
             }
         }

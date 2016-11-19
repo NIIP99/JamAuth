@@ -7,7 +7,8 @@ use JamAuth\JamAuth;
 class JamTask extends PluginTask{
     
     private $plugin;
-    private $tick = 0;
+    private $tick = 0,
+            $loginPacks = [];
     
     public function __construct(JamAuth $plugin){
     	parent::__construct($plugin);
@@ -16,9 +17,16 @@ class JamTask extends PluginTask{
     
     public function onRun($tick){
         $this->tick = $tick;
+        //TODO bulk login query
     }
     
     public function getTick(){
        return $this->tick;
+    }
+    
+    public function pushLogin($username = null){
+        if($username != null){
+            $this->loginPacks[] = $username;
+        }
     }
 }

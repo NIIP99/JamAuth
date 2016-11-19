@@ -99,10 +99,11 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
                         "Mode: ".$mode."\n".
-                        "Database: ".date(Kitchen::$TIME_FORMAT, $this->plugin->getDatabase()->getRule("record"))."\n".
+                        "LocalDatabase: Created on ".date(Kitchen::$TIME_FORMAT, $this->plugin->getDatabase()->getRule("record")).
+                                   " (".$this->plugin->getDatabase()->getAccountCount()." accounts)\n".
                         "Recipe: ".$this->plugin->getKitchen()->getRecipe()->getName()."\n".
                         "Session: ".$sData["total"]." total, ".$sData["authed"]." authenticated, ".$sData["pending"]." pending\n".
-                        "Task Tick: ".$this->plugin->getTask()->getTick()."th"
+                        "JamTask Tick: ".$this->plugin->getTask()->getTick()."th"
                 );
                 break;
             case "reload":

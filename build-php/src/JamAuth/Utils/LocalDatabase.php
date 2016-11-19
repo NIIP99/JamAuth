@@ -47,7 +47,12 @@ class LocalDatabase{
             
             "setRule" =>
             "INSERT or REPLACE INTO rules (name, content)
-             VALUES (:name, :content)"
+             VALUES (:name, :content)",
+            
+            "getCount" =>
+            "SELECT COUNT(*)
+             AS count
+             FROM users"
         ];
         foreach($stmts as $key => $stmt){
             $this->stmt[$key] = $this->db->prepare($stmt);
@@ -115,6 +120,17 @@ class LocalDatabase{
             return false;
         }
         return null;
+    }
+    
+    public function getAccountCount(){
+        $stmt = $this->stmt["getCount"];
+        
+        $stmt->reset();
+        $res = $stmt->execute();
+        if($res === false){
+            return false;
+        }
+        return $res->fetchArray(SQLITE3_ASSOC)["count"];
     }
     
     public function truncate(){
