@@ -26,7 +26,7 @@ class JamSession{
         if($plugin->getAPI()->isOffline()){
             $res = $plugin->getDatabase()->fetchUser($p->getName());
         }else{
-            $res = $plugin->getAPI()->execute("fetchUser", $data);
+            $res = $plugin->getAPI()->execute("userFetch", $data);
         }
         $p->sendMessage($plugin->getKitchen()->getFood("join.message"));
         if(isset($res["food"])){
@@ -59,6 +59,10 @@ class JamSession{
     
     public function isRegistered(){
         return ($this->food != "");
+    }
+    
+    private function endTimeoutTask(){
+        $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
     }
     
     public function direct($msg){
@@ -112,13 +116,12 @@ class JamSession{
         $time = time();
         
         if(!$plugin->getAPI()->isOffline()){
-            $data = [
+            $plugin->getAPI()->execute("userRegister", [
                 "name" => $this->getPlayer()->getName(),
                 "food" => $food,
                 "salt" => $salt,
                 "time" => $time
-            ];
-            $plugin->getAPI()->execute("regUser", $data);
+            ]);
         }
         
         if(!$plugin->getDatabase()->register($this->getPlayer()->getName(), $time, $food, $salt)){
@@ -134,6 +137,7 @@ class JamSession{
                 [$this->getPlayer()->getName(), $this->getPlayer()->getAddress()]
             )
         );
+        $this->endTimeoutTask();
         $this->getPlayer()->sendMessage($plugin->getKitchen()->getFood("register.success"));
         $this->state = self::STATE_AUTHED;
         return true;
@@ -168,13 +172,14 @@ class JamSession{
                 [$this->getPlayer()->getName(), $this->getPlayer()->getAddress()]
             )
         );
+        $this->endTimeoutTask();
         $this->getPlayer()->sendMessage($this->plugin->getKitchen()->getFood("login.success"));
         $this->state = self::STATE_AUTHED;
         return true;
     }
     
     public function logout($stayed = false){
-        $this->plugin->getServer()->getScheduler()->cancelTask($this->TaskID);
+        $this->endTimeoutTask();
         
         $state = ($this->getState() == self::STATE_AUTHED) ? "Authenticated" : "Guest";
         $this->plugin->getLogger()->write(

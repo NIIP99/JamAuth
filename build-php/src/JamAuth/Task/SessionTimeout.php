@@ -8,14 +8,15 @@ use JamAuth\JamAuth;
 
 class SessionTimeout extends PluginTask{
     
-    private $p;
+    private $p, $msg;
     
     public function __construct(JamAuth $plugin, Player $p){
     	parent::__construct($plugin);
         $this->p = $p;
+        $this->msg = $plugin->getKitchen()->getFood("join.err.timeout");
     }
     
     public function onRun($tick){
-        $p->kick();
+        $this->p->kick($this->msg);
     }
 }
