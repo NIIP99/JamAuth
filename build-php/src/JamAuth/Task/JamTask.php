@@ -6,7 +6,6 @@ use JamAuth\JamAuth;
 
 class JamTask extends PluginTask{
     
-    private $plugin;
     private $tick = 0,
             $loginPacks = [];
     

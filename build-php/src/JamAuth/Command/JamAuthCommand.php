@@ -98,6 +98,7 @@ class JamAuthCommand extends Command implements PluginIdentifiableCommand{
                 $sData = $this->plugin->getSessionData();
                 $this->plugin->sendInfo(
                         "Version: ".JAMAUTH_VER."\n".
+                        "Language: ".$this->plugin->getTranslator()->getLanguageName()."\n".
                         "Mode: ".$mode."\n".
                         "LocalDatabase: Created on ".date(Kitchen::$TIME_FORMAT, $this->plugin->getDatabase()->getRule("record")).
                                    " (".$this->plugin->getDatabase()->getAccountCount()." accounts)\n".

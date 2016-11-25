@@ -134,6 +134,10 @@ class JamAuth extends PluginBase{
         }
     }
     
+    public function getAllSessions(){
+        return $this->session;
+    }
+    
     public function killSession($pn){
         unset($this->session[strtolower($pn)]);
     }
